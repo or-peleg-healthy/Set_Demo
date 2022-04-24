@@ -14,20 +14,21 @@ enum Shading: Int, CaseIterable{case striped = 1, solid, open}
 
 struct Card: Hashable {
     func hash(into hasher: inout Hasher) {
-        hasher.combine(hashcode)
+        hasher.combine(identifier)
     }
     
     static func == (lhs: Card, rhs: Card) -> Bool {
-            return lhs.hashcode == rhs.hashcode
+            return lhs.identifier == rhs.identifier
     }
     
     let shape: Shape
     let quantity: Quantity
     let color: Color
     let shading: Shading
-    let hashcode = shape * 1 + quantity * 3 + color * 9 + shading * 27
+    let identifier = shape * 1 + quantity * 3 + color * 9 + shading * 27
     var isMatched = false
     var isSelected = false
     var isOnScreen = false
     var isInGame = true
+    let identifier: Int
 }

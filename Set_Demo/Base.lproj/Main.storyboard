@@ -199,41 +199,45 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CiP-kI-sHd">
-                                <rect key="frame" x="20" y="831" width="144" height="31"/>
-                                <color key="backgroundColor" systemColor="systemMintColor"/>
-                                <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Deal 3 More Cards"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kE9-nq-XAY">
-                                <rect key="frame" x="299" y="831" width="94.5" height="31"/>
-                                <color key="backgroundColor" systemColor="systemMintColor"/>
-                                <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="New Game"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0GW-66-GGf">
-                                <rect key="frame" x="176.5" y="753" width="61.5" height="31"/>
-                                <color key="backgroundColor" systemColor="systemMintColor"/>
-                                <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Score"/>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleAspectFill" axis="vertical" distribution="fillEqually" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="0KZ-Kn-wjR">
+                                <rect key="frame" x="59" y="659" width="296" height="70"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0GW-66-GGf">
+                                        <rect key="frame" x="117.5" y="0.0" width="61.5" height="31"/>
+                                        <color key="backgroundColor" systemColor="systemMintColor"/>
+                                        <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Score"/>
+                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="CxK-ca-EsJ">
+                                        <rect key="frame" x="0.0" y="39" width="296" height="31"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CiP-kI-sHd">
+                                                <rect key="frame" x="0.0" y="0.0" width="144" height="31"/>
+                                                <color key="backgroundColor" systemColor="systemMintColor"/>
+                                                <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Deal 3 More Cards"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kE9-nq-XAY">
+                                                <rect key="frame" x="152" y="0.0" width="144" height="31"/>
+                                                <color key="backgroundColor" systemColor="systemMintColor"/>
+                                                <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="New Game"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGrayColor"/>
                         <constraints>
-                            <constraint firstItem="0GW-66-GGf" firstAttribute="top" relation="greaterThanOrEqual" secondItem="1qb-x7-x5A" secondAttribute="bottom" constant="189" id="BwL-CE-eJs"/>
-                            <constraint firstItem="CiP-kI-sHd" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="DRR-H4-cCk"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="CiP-kI-sHd" secondAttribute="bottom" id="IU7-Pu-Xdh"/>
                             <constraint firstItem="1qb-x7-x5A" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="L0C-H2-JI5"/>
-                            <constraint firstItem="CiP-kI-sHd" firstAttribute="top" relation="greaterThanOrEqual" secondItem="0GW-66-GGf" secondAttribute="bottom" constant="47" id="LBl-I7-l1r"/>
-                            <constraint firstItem="0GW-66-GGf" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="TqN-Xz-tAY"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="kE9-nq-XAY" secondAttribute="trailing" constant="20.5" id="dcR-Rd-Qyc"/>
-                            <constraint firstItem="1qb-x7-x5A" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="gyq-Ax-wcx"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="kE9-nq-XAY" secondAttribute="bottom" id="jGO-Ch-OIq"/>
-                            <constraint firstItem="kE9-nq-XAY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="CiP-kI-sHd" secondAttribute="trailing" constant="8" symbolic="YES" id="wf2-NI-Ofd"/>
+                            <constraint firstItem="1qb-x7-x5A" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="RpO-lT-Vw8"/>
+                            <constraint firstItem="0KZ-Kn-wjR" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Xrf-mM-Spy"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="0KZ-Kn-wjR" secondAttribute="bottom" constant="133" id="u7B-ml-dgm"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1qb-x7-x5A" secondAttribute="trailing" constant="20" id="xJy-Y5-Vp3"/>
                         </constraints>
                     </view>

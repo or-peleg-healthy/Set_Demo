@@ -17,8 +17,18 @@ class ViewController: UIViewController {
             updateViewFromModel()
         }
     }
+    @IBAction func deal3More(_ sender: UIButton) {
+        game.Deal3More()
+        updateViewFromModel()
+    }
+    @IBAction func newGame(_ sender: Any) {
+        game = Set()
+        updateViewFromModel()
+    }
+    @IBOutlet weak var scoreLabel: UILabel!
     
     private func updateViewFromModel(){
+        scoreLabel.text = "Score: \(game.score)"
         for index in cardButtons.indices {
             let button = cardButtons[index]
             if let card = game.currentCardsOnScreen[index]{
@@ -26,6 +36,7 @@ class ViewController: UIViewController {
                     button.setTitle(card.description(), for: UIControl.State.normal)
                     button.setTitleColor(UIColor.systemRed, for: UIControl.State.normal)
                     button.titleLabel?.font = UIFont.systemFont(ofSize: 2)
+                    button.backgroundColor = UIColor.systemMint
                     if card.isSelected{
                         button.layer.borderWidth = 3.0
                         button.layer.borderColor = UIColor.green.cgColor
@@ -42,6 +53,9 @@ class ViewController: UIViewController {
             }
             else{
                 button.backgroundColor = UIColor.systemGray
+                button.setTitle("", for: UIControl.State.normal)
+                button.layer.borderWidth = 0
+                button.layer.borderColor = UIColor.systemGray.cgColor
             }
         }
     }

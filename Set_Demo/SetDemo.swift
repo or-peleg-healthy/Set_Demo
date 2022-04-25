@@ -38,9 +38,11 @@ final class SetDemo {
             }
         }
     }
-    func deal3More() {
+    func deal3More(afterMatch: Bool) {
         if currentCardsOnScreen.filter({ $0 == nil }).count > 2 && lastCardAdded < 79 {
-            checkForMatch()
+            if !afterMatch {
+                checkForMatch()
+            }
             var freeScreenSpots: [Int] = []
             var isFreeSpace = 0
             while freeScreenSpots.count < 3 {
@@ -56,41 +58,19 @@ final class SetDemo {
             }
         }
     }
-    func deal1More(freeSpace: Int) {
-        if lastCardAdded < 79 {
-            lastCardAdded += 1
-            currentCardsOnScreen[freeSpace] = shuffledDeck[lastCardAdded]
-        }
-    }
     func cardWasSelected(at index: Int) {
         checkForMatch()
         if let selectedCard = currentCardsOnScreen[index] {
-            if selectedCard.isMatched {
-                return
-            } else {
-                if !onScreenMatch.isEmpty {
-                    for indexOfCardPartOfMatch in onScreenMatch.indices {
-                        if let cardToHandle = currentCardsOnScreen[indexOfCardPartOfMatch] {
-                            cardToHandle.isInGame = false
-                        }
-                    }
-                    onScreenMatch.removeAll()
-                }
-            }
             if selectedCard.isSelected {
-                if currentSelected.count < 2 {
+                if currentSelected.count < 3 {
                     selectedCard.isSelected = false
-                    for indexToRemove in currentSelected.indices {
-                        if currentCardsOnScreen[currentSelected[indexToRemove]] == selectedCard {
-                            currentSelected.remove(at: indexToRemove)
+                    currentSelected.remove(at: currentSelected.firstIndex(of: index)!)
                             return
                         }
-                    }
-                }
-            } else {
-                selectedCard.isSelected = true
-                currentSelected.append(index)
-                print(currentSelected)
+                    } else {
+                        selectedCard.isSelected = true
+                        currentSelected.append(index)
+                        print(currentSelected)
             }
         }
     }
@@ -115,13 +95,10 @@ final class SetDemo {
         if currentSelected.count == 3 {
             if isMatch() {
                 score += 5
-                for cardIndex in currentSelected.indices {
-                    currentCardsOnScreen[cardIndex]?.isMatched = true
+                for cardIndex in currentSelected {
+                    currentCardsOnScreen[cardIndex] = nil
                 }
-                for cardThatWasMatched in currentCardsOnScreen.indices {
-                    if currentCardsOnScreen[cardThatWasMatched]?.isMatched != nil {
-                    }
-                }
+                deal3More(afterMatch: true)
             } else {
                 score -= 3
                 for cardIndex in currentSelected.indices {

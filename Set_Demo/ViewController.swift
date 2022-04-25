@@ -20,8 +20,10 @@ final class ViewController: UIViewController {
         }
     }
     @IBAction private func deal3More(_ sender: UIButton) {
-        game.deal3More()
-        updateViewFromModel()
+        if gameStarted {
+            game.deal3More(afterMatch: false)
+            updateViewFromModel()
+        }
     }
     @IBAction private func newGame(_ sender: Any) {
         gameStarted = true

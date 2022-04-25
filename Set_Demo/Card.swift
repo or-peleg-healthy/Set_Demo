@@ -39,7 +39,6 @@ final class Card: Hashable {
     let color: Color
     let shading: Shading
     let identifier: Int
-    var isMatched = false
     var isSelected = false
     var isOnScreen = false
     var isInGame = true

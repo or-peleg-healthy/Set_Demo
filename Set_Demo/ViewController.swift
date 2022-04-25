@@ -7,41 +7,43 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-    
-    private lazy var game = Set()
-    @IBOutlet var cardButtons: [UIButton]!
-    @IBAction func touchCard(_ sender: UIButton) {
-        if let cardNumber = cardButtons.firstIndex(of: sender){
-            game.cardWasSelected(at: cardNumber)
-            updateViewFromModel()
+final class ViewController: UIViewController {
+    private lazy var game = SetDemo()
+    @IBOutlet private var cardButtons: [UIButton]!
+    private lazy var gameStarted = false
+    @IBAction private func touchCard(_ sender: UIButton) {
+        if gameStarted {
+            if let cardNumber = cardButtons.firstIndex(of: sender) {
+                game.cardWasSelected(at: cardNumber)
+                updateViewFromModel()
+            }
         }
     }
-    @IBAction func deal3More(_ sender: UIButton) {
-        game.Deal3More()
+    @IBAction private func deal3More(_ sender: UIButton) {
+        game.deal3More()
         updateViewFromModel()
     }
-    @IBAction func newGame(_ sender: Any) {
-        game = Set()
+    @IBAction private func newGame(_ sender: Any) {
+        gameStarted = true
+        game = SetDemo()
         updateViewFromModel()
     }
-    @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet private weak var scoreLabel: UILabel!
     
-    private func updateViewFromModel(){
+    private func updateViewFromModel() {
         scoreLabel.text = "Score: \(game.score)"
         for index in cardButtons.indices {
             let button = cardButtons[index]
-            if let card = game.currentCardsOnScreen[index]{
-                if card.isOnScreen{
+            if let card = game.currentCardsOnScreen[index] {
+                if card.isOnScreen {
                     button.setAttributedTitle(card.unicodeValue(), for: UIControl.State.normal)
                     button.setTitleColor(UIColor.systemRed, for: UIControl.State.normal)
                     button.titleLabel?.font = UIFont.systemFont(ofSize: 2)
                     button.backgroundColor = UIColor.systemMint
-                    if card.isSelected{
+                    if card.isSelected {
                         button.layer.borderWidth = 3.0
                         button.layer.borderColor = UIColor.green.cgColor
-                    }
-                    else {
+                    } else {
                         button.layer.borderWidth = 0
                         button.layer.borderColor = UIColor.systemGray.cgColor
                     }
@@ -50,8 +52,7 @@ class ViewController: UIViewController {
                         game.currentCardsOnScreen[index] = nil
                     }
                 }
-            }
-            else{
+            } else {
                 button.backgroundColor = UIColor.systemGray
                 button.setAttributedTitle(NSAttributedString(""), for: UIControl.State.normal)
                 button.layer.borderWidth = 0

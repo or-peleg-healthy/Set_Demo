@@ -13,7 +13,7 @@
 		B092941328103D9A0008D1DD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B092941128103D9A0008D1DD /* Main.storyboard */; };
 		B092941528103DB00008D1DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B092941428103DB00008D1DD /* Assets.xcassets */; };
 		B092941828103DB00008D1DD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B092941628103DB00008D1DD /* LaunchScreen.storyboard */; };
-		B0929421281577240008D1DD /* Set.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0929420281577240008D1DD /* Set.swift */; };
+		B0929421281577240008D1DD /* SetDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0929420281577240008D1DD /* SetDemo.swift */; };
 		B09294232815774A0008D1DD /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = B09294222815774A0008D1DD /* Card.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,7 +26,7 @@
 		B092941428103DB00008D1DD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B092941728103DB00008D1DD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B092941928103DB00008D1DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B0929420281577240008D1DD /* Set.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Set.swift; sourceTree = "<group>"; };
+		B0929420281577240008D1DD /* SetDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDemo.swift; sourceTree = "<group>"; };
 		B09294222815774A0008D1DD /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -63,7 +63,7 @@
 				B092941F28103DDA0008D1DD /* Resources */,
 				B092940D28103D9A0008D1DD /* SceneDelegate.swift */,
 				B092940F28103D9A0008D1DD /* ViewController.swift */,
-				B0929420281577240008D1DD /* Set.swift */,
+				B0929420281577240008D1DD /* SetDemo.swift */,
 				B09294222815774A0008D1DD /* Card.swift */,
 				B092941128103D9A0008D1DD /* Main.storyboard */,
 				B092941928103DB00008D1DD /* Info.plist */,
@@ -91,6 +91,7 @@
 				B092940428103D9A0008D1DD /* Sources */,
 				B092940528103D9A0008D1DD /* Frameworks */,
 				B092940628103D9A0008D1DD /* Resources */,
+				B09294262816E90A0008D1DD /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -147,12 +148,32 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		B09294262816E90A0008D1DD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nbash\nif which swiftlint >/dev/null; then\n    swiftlint lint --strict\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n    exit 1\nfi\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		B092940428103D9A0008D1DD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0929421281577240008D1DD /* Set.swift in Sources */,
+				B0929421281577240008D1DD /* SetDemo.swift in Sources */,
 				B092941028103D9A0008D1DD /* ViewController.swift in Sources */,
 				B09294232815774A0008D1DD /* Card.swift in Sources */,
 				B092940C28103D9A0008D1DD /* AppDelegate.swift in Sources */,

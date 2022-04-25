@@ -6,7 +6,7 @@
 //
 
 import Foundation
-class Set {
+final class SetDemo {
     var score = 0
     var currentSelected: [Int] = []
     var shuffledDeck: [Card] = []
@@ -15,10 +15,10 @@ class Set {
     var onScreenMatch: [Int] = []
     var deck: [Card] = {
         var tempDeck: [Card] = []
-        for shape in Shape.allCases{
-            for quantity in Quantity.allCases{
-                for color in Color.allCases{
-                    for shading in Shading.allCases{
+        for shape in Shape.allCases {
+            for quantity in Quantity.allCases {
+                for color in Color.allCases {
+                    for shading in Shading.allCases {
                         tempDeck.append(Card(shape: shape, quantity: quantity, color: color, shading: shading))
                     }
                 }
@@ -30,41 +30,47 @@ class Set {
         shuffledDeck = deck.shuffled()
         for cardIndex in 0..<24 {
             if cardIndex < 12 {
-                let CardToAdd = shuffledDeck[cardIndex]
-                CardToAdd.isOnScreen = true
-                currentCardsOnScreen.append(CardToAdd)
-            }else{
+                let cardToAdd = shuffledDeck[cardIndex]
+                cardToAdd.isOnScreen = true
+                currentCardsOnScreen.append(cardToAdd)
+            } else {
                 currentCardsOnScreen.append(nil)
             }
         }
     }
-    func Deal3More() {
-        if currentCardsOnScreen.filter({ $0 == nil }).count > 2 && lastCardAdded < 79{
+    func deal3More() {
+        if currentCardsOnScreen.filter({ $0 == nil }).count > 2 && lastCardAdded < 79 {
             checkForMatch()
-            var FreeScreenSpots: [Int] = []
+            var freeScreenSpots: [Int] = []
             var isFreeSpace = 0
-            while FreeScreenSpots.count < 3 {
-                if currentCardsOnScreen[isFreeSpace] == nil{
-                    FreeScreenSpots.append(isFreeSpace)
+            while freeScreenSpots.count < 3 {
+                if currentCardsOnScreen[isFreeSpace] == nil {
+                    freeScreenSpots.append(isFreeSpace)
                 }
                 isFreeSpace += 1
             }
-            for FreeSpace in FreeScreenSpots {
+            for freeSpace in freeScreenSpots {
                 lastCardAdded += 1
-                currentCardsOnScreen[FreeSpace] = shuffledDeck[lastCardAdded]
+                currentCardsOnScreen[freeSpace] = shuffledDeck[lastCardAdded]
                 shuffledDeck[lastCardAdded].isOnScreen = true
             }
         }
     }
-    func cardWasSelected(at index: Int){
+    func deal1More(freeSpace: Int) {
+        if lastCardAdded < 79 {
+            lastCardAdded += 1
+            currentCardsOnScreen[freeSpace] = shuffledDeck[lastCardAdded]
+        }
+    }
+    func cardWasSelected(at index: Int) {
         checkForMatch()
-        if let selectedCard = currentCardsOnScreen[index]{
+        if let selectedCard = currentCardsOnScreen[index] {
             if selectedCard.isMatched {
                 return
             } else {
-                if !onScreenMatch.isEmpty{
-                    for indexOfCardPartOfMatch in onScreenMatch.indices{
-                        if let cardToHandle = currentCardsOnScreen[indexOfCardPartOfMatch]{
+                if !onScreenMatch.isEmpty {
+                    for indexOfCardPartOfMatch in onScreenMatch.indices {
+                        if let cardToHandle = currentCardsOnScreen[indexOfCardPartOfMatch] {
                             cardToHandle.isInGame = false
                         }
                     }
@@ -74,7 +80,7 @@ class Set {
             if selectedCard.isSelected {
                 if currentSelected.count < 2 {
                     selectedCard.isSelected = false
-                    for indexToRemove in currentSelected.indices{
+                    for indexToRemove in currentSelected.indices {
                         if currentCardsOnScreen[currentSelected[indexToRemove]] == selectedCard {
                             currentSelected.remove(at: indexToRemove)
                             return
@@ -88,22 +94,19 @@ class Set {
             }
         }
     }
-    
-    func isMatch() -> Bool{
-        var Matcher: [[Int]] = [[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
+    func isMatch() -> Bool {
+        var matcher: [[Int]] = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
         for index in currentSelected {
-            if let card = currentCardsOnScreen[index]{
-                Matcher[0][card.shape.rawValue] += 1
-                Matcher[1][card.quantity.rawValue] += 1
-                Matcher[2][card.color.rawValue] += 1
-                Matcher[3][card.shading.rawValue] += 1
+            if let card = currentCardsOnScreen[index] {
+                matcher[0][card.shape.rawValue] += 1
+                matcher[1][card.quantity.rawValue] += 1
+                matcher[2][card.color.rawValue] += 1
+                matcher[3][card.shading.rawValue] += 1
             }
         }
-        for Dimension in Matcher {
-            for ValueWithinDimension in Dimension{
-                if ValueWithinDimension == 2 {
-                    return false
-                }
+        for dimension in matcher {
+            for valueWithinDimension in dimension where valueWithinDimension == 2 {
+                return false
             }
         }
         return true
@@ -115,8 +118,11 @@ class Set {
                 for cardIndex in currentSelected.indices {
                     currentCardsOnScreen[cardIndex]?.isMatched = true
                 }
-            }
-            else {
+                for cardThatWasMatched in currentCardsOnScreen.indices {
+                    if currentCardsOnScreen[cardThatWasMatched]?.isMatched != nil {
+                    }
+                }
+            } else {
                 score -= 3
                 for cardIndex in currentSelected.indices {
                     currentCardsOnScreen[currentSelected[cardIndex]]?.isSelected = false
@@ -128,9 +134,9 @@ class Set {
 }
 
 extension Int {
-    var arc4random: Int{
+    var arc4random: Int {
         if self > 0 {
-        return Int(arc4random_uniform(UInt32(self)))
+            return Int.random(in: 0...self)
         }
         return 0
     }

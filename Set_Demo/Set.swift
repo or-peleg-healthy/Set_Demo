@@ -19,8 +19,7 @@ class Set {
             for quantity in Quantity.allCases{
                 for color in Color.allCases{
                     for shading in Shading.allCases{
-                        var identifier = shape.rawValue * 1 + quantity.rawValue * 3 + color.rawValue * 9 + shading.rawValue * 27
-                        tempDeck.append(Card(shape: shape, quantity: quantity, color: color, shading: shading, identifier: identifier))
+                        tempDeck.append(Card(shape: shape, quantity: quantity, color: color, shading: shading))
                     }
                 }
             }
@@ -31,7 +30,7 @@ class Set {
         shuffledDeck = deck.shuffled()
         for cardIndex in 0..<24 {
             if cardIndex < 12 {
-                var CardToAdd = shuffledDeck[cardIndex]
+                let CardToAdd = shuffledDeck[cardIndex]
                 CardToAdd.isOnScreen = true
                 currentCardsOnScreen.append(CardToAdd)
             }else{
@@ -46,7 +45,7 @@ class Set {
             } else {
                 if !onScreenMatch.isEmpty{
                     for indexOfCardPartOfMatch in onScreenMatch.indices{
-                        if var cardToHandle = currentCardsOnScreen[indexOfCardPartOfMatch]{
+                        if let cardToHandle = currentCardsOnScreen[indexOfCardPartOfMatch]{
                             cardToHandle.isInGame = false
                         }
                     }
@@ -55,7 +54,7 @@ class Set {
             }
             if selectedCard.isSelected {
                 if currentSelected.count < 2 {
-                    currentCardsOnScreen[index]?.isSelected = false
+                    selectedCard.isSelected = false
                     for indexToRemove in currentSelected.indices{
                         if currentCardsOnScreen[currentSelected[indexToRemove]] == selectedCard {
                             currentSelected.remove(at: indexToRemove)
@@ -64,7 +63,7 @@ class Set {
                     }
                 }
             } else {
-                currentCardsOnScreen[index]?.isSelected = true
+                selectedCard.isSelected = true
                 currentSelected.append(index)
                 print(currentSelected)
                 if currentSelected.count == 3 {

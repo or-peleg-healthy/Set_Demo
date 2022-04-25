@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 enum Shape: Int, CaseIterable{case triangle = 0, circle, square}
 enum Quantity: Int, CaseIterable{case one = 0, two, three}
@@ -28,8 +29,14 @@ class Card: Hashable {
             return lhs.identifier == rhs.identifier
     }
     
-    func description() -> String {
-        return ("\(shape), \(quantity), \(color), \(shading)")
+    func unicodeValue() -> NSAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .strokeWidth: decodeWidth[shading.rawValue]!,
+            .foregroundColor:
+                decodeColors[color.rawValue]?.withAlphaComponent(decodeShading[shading.rawValue]!) ?? UIColor.systemBrown
+            ]
+        let attributedString = NSAttributedString(string: String(repeating: "\(decodeShapes[shape.rawValue] ?? "")", count: quantity.rawValue+1), attributes: attributes)
+        return (attributedString)
     }
     let shape: Shape
     let quantity: Quantity
@@ -40,4 +47,8 @@ class Card: Hashable {
     var isSelected = false
     var isOnScreen = false
     var isInGame = true
+    let decodeShapes:[Int:String] = [0:"▲", 1: "●", 2:"■"]
+    let decodeColors:[Int:UIColor] = [0: UIColor.blue, 1: UIColor.red, 2: UIColor.green]
+    let decodeShading:[Int:CGFloat] = [0:CGFloat(0.10), 1: CGFloat(1), 2: CGFloat(1)]
+    let decodeWidth:[Int:Double] = [0:0,1:0,2:10.0]
 }

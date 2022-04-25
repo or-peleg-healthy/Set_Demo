@@ -33,7 +33,7 @@ class ViewController: UIViewController {
             let button = cardButtons[index]
             if let card = game.currentCardsOnScreen[index]{
                 if card.isOnScreen{
-                    button.setTitle(card.description(), for: UIControl.State.normal)
+                    button.setAttributedTitle(card.unicodeValue(), for: UIControl.State.normal)
                     button.setTitleColor(UIColor.systemRed, for: UIControl.State.normal)
                     button.titleLabel?.font = UIFont.systemFont(ofSize: 2)
                     button.backgroundColor = UIColor.systemMint
@@ -53,7 +53,7 @@ class ViewController: UIViewController {
             }
             else{
                 button.backgroundColor = UIColor.systemGray
-                button.setTitle("", for: UIControl.State.normal)
+                button.setAttributedTitle(NSAttributedString(""), for: UIControl.State.normal)
                 button.layer.borderWidth = 0
                 button.layer.borderColor = UIColor.systemGray.cgColor
             }

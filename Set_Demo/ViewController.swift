@@ -21,7 +21,7 @@ final class ViewController: UIViewController {
     }
     @IBAction private func deal3More(_ sender: UIButton) {
         if gameStarted {
-            game.deal3More(afterMatch: false)
+            game.deal3More()
             updateViewFromModel()
         }
     }
@@ -38,13 +38,21 @@ final class ViewController: UIViewController {
             let button = cardButtons[index]
             if let card = game.currentCardsOnScreen[index] {
                 if card.isOnScreen {
+                    button.layer.cornerRadius = 0
                     button.setAttributedTitle(card.unicodeValue(), for: UIControl.State.normal)
                     button.setTitleColor(UIColor.systemRed, for: UIControl.State.normal)
                     button.titleLabel?.font = UIFont.systemFont(ofSize: 2)
                     button.backgroundColor = UIColor.systemMint
                     if card.isSelected {
                         button.layer.borderWidth = 3.0
+                        if card.isMatched {
+                            button.layer.cornerRadius = 50.0
+                        }
+                        if card.missMatched {
+                            button.layer.borderColor = UIColor.red.cgColor
+                        } else {
                         button.layer.borderColor = UIColor.green.cgColor
+                        }
                     } else {
                         button.layer.borderWidth = 0
                         button.layer.borderColor = UIColor.systemGray.cgColor

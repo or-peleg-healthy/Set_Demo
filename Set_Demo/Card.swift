@@ -41,6 +41,8 @@ final class Card: Hashable {
     let identifier: Int
     var isSelected = false
     var isOnScreen = false
+    var isMatched = false
+    var missMatched = false
     var isInGame = true
     let decodeShapes: [Int: String] = [0: "▲", 1: "●", 2: "■"]
     let decodeColors: [Int: UIColor] = [0: UIColor.blue, 1: UIColor.red, 2: UIColor.green]

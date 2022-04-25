@@ -10,9 +10,6 @@ import UIKit
 class ViewController: UIViewController {
     
     private lazy var game = Set()
-    private var buttonsToCardDict: [Int:Int] = [:]
-    var placeOnBoard = 0
-    updateDict(forFirstTime: true)
     @IBOutlet var cardButtons: [UIButton]!
     @IBAction func touchCard(_ sender: UIButton) {
         if let cardNumber = cardButtons.firstIndex(of: sender){
@@ -24,14 +21,27 @@ class ViewController: UIViewController {
     private func updateViewFromModel(){
         for index in cardButtons.indices {
             let button = cardButtons[index]
-            let card = game.shuffledDeck[index]
-        }
-    }
-    private func updateDict(forFirstTime:Bool) {
-        if forFirstTime{
-            for cardIndex in game.currentCardsOnScreen.indices {
-                buttonsToCardDict[placeOnBoard] = game.currentCardsOnScreen[cardIndex].identifier
-                placeOnBoard += 1
+            if let card = game.currentCardsOnScreen[index]{
+                if card.isOnScreen{
+                    button.setTitle(card.description(), for: UIControl.State.normal)
+                    button.setTitleColor(UIColor.systemRed, for: UIControl.State.normal)
+                    button.titleLabel?.font = UIFont.systemFont(ofSize: 2)
+                    if card.isSelected{
+                        button.layer.borderWidth = 3.0
+                        button.layer.borderColor = UIColor.green.cgColor
+                    }
+                    else {
+                        button.layer.borderWidth = 0
+                        button.layer.borderColor = UIColor.systemGray.cgColor
+                    }
+                    if !card.isInGame {
+                        button.setTitle("", for: UIControl.State.normal)
+                        game.currentCardsOnScreen[index] = nil
+                    }
+                }
+            }
+            else{
+                button.backgroundColor = UIColor.systemGray
             }
         }
     }

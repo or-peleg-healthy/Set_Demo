@@ -26,26 +26,14 @@ final class Card: Hashable {
     static func == (lhs: Card, rhs: Card) -> Bool {
             lhs.identifier == rhs.identifier
     }
-    func unicodeValue() -> NSAttributedString {
-        let attributes: [NSAttributedString.Key: Any] = [
-            .strokeWidth: decodeWidth[shading.rawValue]!,
-            .foregroundColor:
-                decodeColors[color.rawValue]?.withAlphaComponent(decodeShading[shading.rawValue]!) ?? UIColor.systemBrown]
-        let attributedString = NSAttributedString(string: String(repeating: "\(decodeShapes[shape.rawValue] ?? "")", count: quantity.rawValue + 1), attributes: attributes)
-        return (attributedString)
-    }
     let shape: Shape
     let quantity: Quantity
     let color: Color
     let shading: Shading
-    let identifier: Int
+    private let identifier: Int
     var isSelected = false
     var isOnScreen = false
     var isMatched = false
     var missMatched = false
     var isInGame = true
-    let decodeShapes: [Int: String] = [0: "▲", 1: "●", 2: "■"]
-    let decodeColors: [Int: UIColor] = [0: UIColor.green, 1: UIColor.black, 2: UIColor.systemIndigo]
-    let decodeShading: [Int: CGFloat] = [0: CGFloat(0.30), 1: CGFloat(1), 2: CGFloat(1)]
-    let decodeWidth: [Int: Double] = [0: 0, 1: 0, 2: 10.0]
 }

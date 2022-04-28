@@ -7,13 +7,12 @@
 
 import Foundation
 final class SetDemo {
-    var score = 0
-    var currentSelected: [Int] = []
-    var shuffledDeck: [Card] = []
+    private(set) var score = 0
+    private(set) var currentSelected: [Int] = []
     var currentCardsOnScreen: [Card?] = []
-    var lastCardAdded = 11
-    var onScreenMatch: [Int] = []
-    var deck: [Card] = {
+    private var shuffledDeck: [Card] = []
+    private var lastCardAdded = 11
+    private var deck: [Card] = {
         var tempDeck: [Card] = []
         for shape in Shape.allCases {
             for quantity in Quantity.allCases {
@@ -89,7 +88,7 @@ final class SetDemo {
             return false
         }
     }
-    func didGameEnd() -> Bool {
+    private func didGameEnd() -> Bool {
         let tmpSelectedCards = currentSelected
         currentSelected.removeAll()
         for card1 in currentCardsOnScreen.indices {
@@ -108,7 +107,7 @@ final class SetDemo {
         currentSelected = tmpSelectedCards
         return true
     }
-    func isMatch() -> Bool {
+    private func isMatch() -> Bool {
         var matcher: [[Int]] = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
         for index in currentSelected {
             if let card = currentCardsOnScreen[index] {
@@ -128,7 +127,7 @@ final class SetDemo {
         }
         return true
     }
-    func checkForMatch() {
+    private func checkForMatch() {
         if currentSelected.count == 3 {
             if isMatch() {
                 score += 5

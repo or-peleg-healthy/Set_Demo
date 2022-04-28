@@ -8,6 +8,10 @@
 import UIKit
 
 final class ViewController: UIViewController {
+    private(set) var decodeShapes: [Int: String] = [0: "▲", 1: "●", 2: "■"]
+    private(set) var decodeColors: [Int: UIColor] = [0: UIColor.green, 1: UIColor.black, 2: UIColor.systemIndigo]
+    private(set) var decodeShading: [Int: CGFloat] = [0: CGFloat(0.30), 1: CGFloat(1), 2: CGFloat(1)]
+    private(set) var decodeWidth: [Int: Double] = [0: 0, 1: 0, 2: 10.0]
     private lazy var game = SetDemo()
     @IBOutlet private var cardButtons: [UIButton]!
     private lazy var gameStarted = false
@@ -47,7 +51,7 @@ final class ViewController: UIViewController {
             if let card = game.currentCardsOnScreen[index] {
                 if card.isOnScreen {
                     button.layer.cornerRadius = 0
-                    button.setAttributedTitle(card.unicodeValue(), for: UIControl.State.normal)
+                    button.setAttributedTitle(card.unicodeValue(decodeWidth: decodeWidth, decodeShading: decodeShading, decodeShapes: decodeShapes, decodeColors: decodeColors), for: UIControl.State.normal)
                     button.setTitleColor(UIColor.systemRed, for: UIControl.State.normal)
                     button.titleLabel?.font = UIFont.systemFont(ofSize: 2)
                     button.backgroundColor = UIColor.systemMint
@@ -88,5 +92,15 @@ final class ViewController: UIViewController {
             }
         ))
         self.present(gameOverAlert, animated: true)
+    }
+}
+extension Card {
+    func unicodeValue(decodeWidth: [Int: Double], decodeShading: [Int: CGFloat], decodeShapes: [Int: String], decodeColors: [Int: UIColor]) -> NSAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .strokeWidth: decodeWidth[shading.rawValue]!,
+            .foregroundColor:
+                decodeColors[color.rawValue]?.withAlphaComponent(decodeShading[shading.rawValue]!) ?? UIColor.systemBrown]
+        let attributedString = NSAttributedString(string: String(repeating: "\(decodeShapes[shape.rawValue] ?? "")", count: quantity.rawValue + 1), attributes: attributes)
+        return (attributedString)
     }
 }

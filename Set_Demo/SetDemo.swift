@@ -144,7 +144,6 @@ final class SetDemo {
         }
     }
 }
-
 extension Int {
     var arc4random: Int {
         if self > 0 {

@@ -11,10 +11,14 @@ final class ViewController: UIViewController {
     private lazy var game = SetDemo()
     @IBOutlet private var cardButtons: [UIButton]!
     private lazy var gameStarted = false
+    @IBOutlet private weak var deal3MoreButton: UIButton!
     @IBAction private func touchCard(_ sender: UIButton) {
         if gameStarted {
             if let cardNumber = cardButtons.firstIndex(of: sender) {
-                game.cardWasSelected(at: cardNumber)
+                let gameEnded = game.cardWasSelected(at: cardNumber)
+                if gameEnded {
+                    showGameOverAlert()
+                }
                 updateViewFromModel()
             }
         }
@@ -29,6 +33,10 @@ final class ViewController: UIViewController {
         gameStarted = true
         game = SetDemo()
         updateViewFromModel()
+        for button in self.cardButtons {
+            button.isEnabled = true
+        }
+        deal3MoreButton.isEnabled = true
     }
     @IBOutlet private weak var scoreLabel: UILabel!
     
@@ -69,5 +77,16 @@ final class ViewController: UIViewController {
                 button.layer.borderColor = UIColor.systemGray.cgColor
             }
         }
+    }
+    func showGameOverAlert() {
+        let gameOverAlert = UIAlertController(title: "Game Over !! \n no more matches can be composed! \n you final score is \(game.score)", message: nil, preferredStyle: .alert)
+        gameOverAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            for button in self.cardButtons {
+                button.isEnabled = false
+            }
+            self.deal3MoreButton.isEnabled = false
+            }
+        ))
+        self.present(gameOverAlert, animated: true)
     }
 }

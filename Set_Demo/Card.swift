@@ -9,7 +9,7 @@ import UIKit
 
 enum Shape: Int, CaseIterable { case triangle = 0, circle, square }
 enum Quantity: Int, CaseIterable { case one = 0, two, three }
-enum Color: Int, CaseIterable { case blue = 0, red, green }
+enum Color: Int, CaseIterable { case purple = 0, red, orange }
 enum Shading: Int, CaseIterable { case striped = 0, solid, open }
 
 final class Card: Hashable {
@@ -45,7 +45,7 @@ final class Card: Hashable {
     var missMatched = false
     var isInGame = true
     let decodeShapes: [Int: String] = [0: "▲", 1: "●", 2: "■"]
-    let decodeColors: [Int: UIColor] = [0: UIColor.blue, 1: UIColor.red, 2: UIColor.green]
-    let decodeShading: [Int: CGFloat] = [0: CGFloat(0.10), 1: CGFloat(1), 2: CGFloat(1)]
+    let decodeColors: [Int: UIColor] = [0: UIColor.green, 1: UIColor.black, 2: UIColor.systemIndigo]
+    let decodeShading: [Int: CGFloat] = [0: CGFloat(0.30), 1: CGFloat(1), 2: CGFloat(1)]
     let decodeWidth: [Int: Double] = [0: 0, 1: 0, 2: 10.0]
 }

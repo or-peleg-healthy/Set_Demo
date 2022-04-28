@@ -1,0 +1,292 @@
+# SwiftLint Configuration File
+# Github: https://github.com/realm/SwiftLint
+# Rule Directory: https://realm.github.io/SwiftLint/rule-directory.html
+
+
+reporter: "xcode"
+
+
+excluded:
+  - build
+  - BuildTools # workaround for ignoring SPM packages
+  - DerivedData
+  - SourcePackages # For CI
+
+
+disabled_rules:
+  - line_length
+  - trailing_whitespace
+  - todo
+  - xctfail_message
+  - no_fallthrough_only
+
+
+opt_in_rules:
+  - anyobject_protocol
+  - array_init
+  - attributes
+  - closure_spacing
+  - collection_alignment
+  - colon
+  - contains_over_filter_is_empty
+  - contains_over_filter_count
+  - contains_over_range_nil_comparison
+  - convenience_type
+  - empty_collection_literal
+  - empty_count
+  - empty_string
+  - empty_xctest_method
+  - explicit_init
+  - first_where
+  - file_name
+  - file_name_no_space
+  - flatmap_over_map_reduce
+  - joined_default_parameter
+  - last_where
+  - legacy_random
+  - legacy_multiple
+  - literal_expression_end_indentation
+  - multiline_arguments
+  - multiline_function_chains
+  - operator_usage_whitespace
+  - overridden_super_call
+  - prefer_self_type_over_type_of_self
+  - redundant_type_annotation
+  - vertical_whitespace_closing_braces
+  - vertical_whitespace_opening_braces
+  - unavailable_function
+  - unused_import
+  - unused_declaration
+  - toggle_bool
+  - implicit_return
+  - modifier_order
+  - number_separator
+  - optional_enum_case_matching
+  - override_in_extension
+  - prefer_zero_over_explicit_init
+  - private_action
+  - private_outlet
+  - reduce_into
+  - single_test_class
+  - sorted_first_last
+  - vertical_parameter_alignment_on_call
+  - yoda_condition
+  - identical_operands
+  - lower_acl_than_parent
+
+
+# prefix a custom rule's message with "CUSTOM RULE: "
+custom_rules:
+  function_starts_with_lowercase:
+    name: "Function Name Starts with Lowercase Letter"
+    regex: "func [A-Z].+"
+    message: "CUSTOM RULE: Function name does not start with a lowercase letter."
+    severity: error
+  variable_starts_with_lowercase:
+    name: "Variable Name Starts with Lowercase Letter"
+    regex: "(?<!case )(var|let) [A-Z].+"
+    message: "CUSTOM RULE: Variable name does not start with a lowercase letter."
+    severity: error
+  function_needless_get_prefix:
+    name: "Function Name Avoids Needless Prefix 'get'"
+    regex: "func get.+\\("
+    message: "CUSTOM RULE: Function name starts with a needless 'get'."
+    severity: warning
+  computed_variable_needless_get_prefix:
+    name: "Computed Variable Name Avoids Needless Prefix 'get'"
+    regex: "var get.+\\:"
+    message: "CUSTOM RULE: Computed variable name starts with a needless 'get'."
+    severity: warning
+  acronym_not_at_start_uniformly_uppercase:
+    name: "Acronym Not At Start Is Uniformly Uppercased"
+    regex: "(class|struct|enum|protocol|func|let|var|case) [^\n]+(Api|Html|Json|Pcp|Pdf|Uk|Url|Vc|Ui)"
+    message: "CUSTOM RULE: Acronym is not uniformly uppercased."
+    severity: warning
+  function_acronym_at_start_uniformly_lowercase:
+    name: "Acronym At Start Of Function Is Uniformly Lowercased"
+    regex: "func (API|HTML|JSON|PCP|PDF|UK|URL|VC|UI).*"
+    message: "CUSTOM RULE: Acronym at start of function is not uniformly lowercased."
+    severity: warning
+  variable_acronym_at_start_uniformly_lowercase:
+    name: "Acronym At Start Of Variable Is Uniformly Lowercased"
+    regex: "(?<!case )(var|let) (API|HTML|JSON|PCP|PDF|UK|URL|VC|UI).*"
+    message: "CUSTOM RULE: Acronym at start of variable is not uniformly lowercased."
+    severity: warning
+  todos_format:
+    name: "TODO/MARK/FIXME Is Accompanied By A Colon"
+    regex: "(\\/\\/|\\/\\*) *(TODO|MARK|FIXME)[^:]"
+    message: "CUSTOM RULE: TODO/MARK/FIXME is not accompanied by a colon."
+    severity: error
+  generic_value_void_verbose:
+    name: "Void Generic Value Is Written Verbosely"
+    regex: "\\.[^\n]+\\(\\(\\)\\)"
+    message: "CUSTOM RULE: Void generic value is written verbosely. Hide behind abstraction."
+    severity: error
+  warning_over_todos:
+    name: "Prefer The `#warning` Compiler Directive Over TODO/FIXME"
+    regex: "(\\/\\/|\\/\\*) *(TODO|FIXME)"
+    message: "CUSTOM RULE: TODO/FIXME are easy to ignore. Use the `#warning` compiler directive instead."
+    severity: warning
+  comma_over_and_operator:
+    name: "Prefer Comma Over And Operator In Control Flow Statements"
+    regex: "(if|guard|while)[\n ][^\n{]+ &&"
+    message: "CUSTOM RULE: Control flow statement contains &&. Use comma instead."
+    severity: warning
+  optional_over_none_case:
+    name: "Prefer Optional Enum Over A `none` Case"
+    regex: "case [^\n]*(?<!\\.)`none`"
+    message: "CUSTOM RULE: Enum with a `none` case is discouraged. Prefer promoting it to an Optional at point of use."
+    severity: error
+  redundant_foundation_import:
+    name: "Redundant Import Of Foundation"
+    regex: "(import (UIKit|AVFoundation).*import Foundation)|(import Foundation.*import (UIKit|AVFoundation))"
+    message: "CUSTOM RULE: File imports frameworks which themselves import `Foundation`. Remove redundant 'import Foundation'."
+    severity: error
+  documentation_comment_java_style:
+    name: "Java-style Documentation Comment"
+    regex: "\\/\\*\\*.*\\*\\/"
+    message: "CUSTOM RULE: Java-style documentation comments are discouraged. Use triple slash (///) or the shortcut `⌥ – Option + ⌘ - Command + /` instead."
+    severity: error
+  hungarian_notation_constant_decl:
+    name: "Hungarian Notation Constant Declaration"
+    regex: "let (k|g)[A-Z][^\n]* ="
+    message: "CUSTOM RULE: Declaring a constant using Hungarian notation is discouraged. Use lowerCamelCase instead."
+    severity: error
+  hungarian_notation_constant_decl:
+    name: "Hungarian Notation Constant Declaration"
+    regex: "let (k|g)[A-Z][^\n]* ="
+    message: "CUSTOM RULE: Declaring a constant using Hungarian notation is discouraged. Use lowerCamelCase instead."
+    severity: error
+  self_executing_closure_ui_property_setup:
+    name: "Self Executing Anonymous Closure UI Property Setup"
+    regex: "(let|var) [^\n ]+: (UI[^\n ]+|[^\n ]+View|[^\n ]*(Button|Label|TextField|Control|Picker|Slider)|[^\n ]*Bar*[^\n ]+) = \\{"
+    message: "CUSTOM RULE: Setting up a UI property using a self-executing anonymous closure is discouraged. Defer all setup code to a singular dedicated method instead."
+    severity: error
+  first_argument_label_identical_function_name_end:
+    name: "First Argument Label Identical To Function Name End"
+    regex: "func ([^\n ]+([A-Z])(.+)\\((?i)\\2\\3|([^\n ]+)\\(\\4)"
+    message: "CUSTOM RULE: Including a first argument label that is identical to the end of the function name is discouraged. Either change the argument label or drop it completely."
+    severity: error
+  implicit_singleton_dependency:
+    name: "Implicit Singleton Dependency"
+    regex: "[^\n ]+\\.(shared|sharedInstance|default|standard)\\."
+    message: "CUSTOM RULE: Having an implicit singleton dependency is discouraged. Make it explicit or use DI."
+    severity: error
+  single_line_if_statement:
+    name: "Single Line If Statement"
+    regex: "if [^\n\\{]*(?<!:) \\{[ ]?[^\n][^\\/\\/][^\n]*[ ]?\\}"
+    message: "CUSTOM RULE: Single line if statements are discouraged. Use a newline."
+    severity: error
+  non_final_class_decl:
+    name: "Non Final Class Declaration"
+    regex: "(?<!final )(?<!open )class [A-Z][^\n\\{()]* \\{"
+    message: "CUSTOM RULE: Non final classes should be avoided if possible. Prefix your class declaration with the `final` keyword."
+    severity: warning
+  testable_import:
+    name: "@testable import"
+    regex: "@testable import [^\n ]*\n"
+    message: "CUSTOM RULE: Using @testable might indicate implementation details are tested, rather than the public API. Remove `@testable` unless altering the visibility of your code is absolutely necessary."
+    severity: warning
+  non_strong_self_shadowing:
+    name: "Non-Strong Self Shadowing"
+    regex: "(if|guard) [^\n]* self = self"
+    message: "CUSTOM RULE: Shadowing non-strong `self` with a variable named 'self' is discouraged. Use an explicit name, such as 'weakSelf' or 'unownedSelf'."
+    severity: error
+  verbose_failure_assertion:
+    name: "Verbose Failure Assertion"
+    regex: "XCTAssert(\\(false\\)|True\\(false\\)|False\\(true\\))"
+    message: "CUSTOM RULE: Use `XCTFail` to generates a failure."
+    severity: error
+  switch_case_associated_values_capturing:
+    name: "Switch Case Associated Value(s) Capturing"
+    regex: "case (var|let) \\.[^\n]+\\([^\n)]+\\):"
+    message: "CUSTOM RULE: Capturing associated value(s) outside the variable list is discouraged. Use var/let within the parentheses."
+    severity: error
+  xctassert_true_expression:
+    name: "XCTAssert True Expression"
+    regex: "XCTAssertTrue\\([^\n]+\\)"
+    message: "CUSTOM RULE: Use `XCTAssert` to assert that an expression is true."
+    severity: error
+  singular_enum_name:
+    name: "Singular Enum Name"
+    regex: "enum [A-Z][^\n ]*(?<!u|s)s \\{[^}]"
+    message: "CUSTOM RULE: Giving enumeration types a plural name is discouraged. Use the singular form instead."
+    severity: error
+  verbose_ignored_parameters_pattern_matching:
+    name: "Verbose Ignored Parameters Pattern Matching"
+    regex: "(?<!case )\\([_, ]+\\)"
+    message: "CUSTOM RULE: Wrapping ignored parameters in parentheses is discouraged. If in the context of a switch-case drop the pattern completely; Otherwise, remove only the parentheses."
+    severity: error
+  result_never_failure_type:
+    name: "Result Never Failure Type"
+    regex: "Result<.*, Never>$"
+    message: "CUSTOM RULE: Having `Never` as `Result`'s failure type is discouraged. Instead, you can use the `Success` type directly."
+    severity: error
+
+
+attributes:
+  always_on_same_line:
+    - "@IBSegueAction"
+    - "@IBAction"
+    - "@IBDesignable"
+    - "@NSManaged"
+    - "@objc"
+    - "@objcMembers"
+
+multiline_arguments:
+  first_argument_location: same_line
+  only_enforce_after_first_closure_on_first_line: false
+  
+control_statement:
+    severity: warning
+    
+force_cast: warning
+
+force_try:
+  severity: warning
+  
+file_length:
+  warning: 800
+  error: 1200
+  
+type_body_length:
+  warning: 500
+  error: 600
+  
+function_body_length:
+  warning: 200
+  
+type_name:
+  min_length: 4
+  max_length:
+    warning: 60
+  excluded: 
+    - Log
+    - Key
+  
+identifier_name:
+  min_length:
+    warning: 3
+  excluded:
+    - id
+    - ok
+    - no
+    - on
+    - mb
+    - i
+    - x
+    - y
+    - z
+    - vc
+    - to
+    - ip
+    - vm
+    
+nesting:
+  type_level:
+    warning: 3
+        
+cyclomatic_complexity:
+  ignores_case_statements: true
+    
+function_parameter_count: 10

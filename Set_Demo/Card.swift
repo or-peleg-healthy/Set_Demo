@@ -5,7 +5,7 @@
 //  Created by Or Peleg on 24/04/2022.
 //
 
-import UIKit
+import Foundation
 
 enum Shape: Int, CaseIterable { case triangle = 0, circle, square }
 enum Quantity: Int, CaseIterable { case one = 0, two, three }

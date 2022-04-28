@@ -11,7 +11,7 @@ final class SetDemo {
     private(set) var currentSelected: [Int] = []
     var currentCardsOnScreen: [Card?] = []
     private var shuffledDeck: [Card] = []
-    private var lastCardAdded = 11
+    private(set) var lastCardAdded = 11
     private var deck: [Card] = {
         var tempDeck: [Card] = []
         for shape in Shape.allCases {
@@ -39,20 +39,18 @@ final class SetDemo {
     }
     func deal3More() {
         checkForMatch()
-        if currentCardsOnScreen.filter({ $0 == nil }).count > 2 && lastCardAdded < 79 {
-            var freeScreenSpots: [Int] = []
-            var isFreeSpace = 0
-            while freeScreenSpots.count < 3 {
-                if currentCardsOnScreen[isFreeSpace] == nil {
-                    freeScreenSpots.append(isFreeSpace)
-                }
-                isFreeSpace += 1
+        var freeScreenSpots: [Int] = []
+        var isFreeSpace = 0
+        while freeScreenSpots.count < 3 {
+            if currentCardsOnScreen[isFreeSpace] == nil {
+                freeScreenSpots.append(isFreeSpace)
             }
-            for freeSpace in freeScreenSpots {
-                lastCardAdded += 1
-                currentCardsOnScreen[freeSpace] = shuffledDeck[lastCardAdded]
-                shuffledDeck[lastCardAdded].isOnScreen = true
-            }
+            isFreeSpace += 1
+        }
+        for freeSpace in freeScreenSpots {
+            lastCardAdded += 1
+            currentCardsOnScreen[freeSpace] = shuffledDeck[lastCardAdded]
+            shuffledDeck[lastCardAdded].isOnScreen = true
         }
     }
     func cardWasSelected(at index: Int) -> Bool {

@@ -45,12 +45,29 @@ final class ViewController: UIViewController {
     }
     private func updateViewFromModel() {
         scoreLabel.text = "Score: \(game.score)"
+        if game.lastCardAdded == 80 {
+            deal3MoreButton.isEnabled = false
+            deal3MoreButton.setTitle("Deck is Empty", for: UIControl.State.normal)
+        } else {
+            if game.currentCardsOnScreen.contains(nil) {
+                deal3MoreButton.isEnabled = true
+                deal3MoreButton.setTitle("Deal 3 More Cards", for: UIControl.State.normal)
+            } else {
+                if game.currentSelected.isEmpty || !game.currentCardsOnScreen[game.currentSelected[0]]!.isMatched {
+                    deal3MoreButton.isEnabled = false
+                    deal3MoreButton.setTitle("Board is Full", for: UIControl.State.normal)
+                } else {
+                    deal3MoreButton.isEnabled = true
+                    deal3MoreButton.setTitle("Deal 3 More Cards", for: UIControl.State.normal)
+                }
+            }
+        }
         for index in cardButtons.indices {
             let button = cardButtons[index]
             if let card = game.currentCardsOnScreen[index] {
                 if card.isOnScreen {
                     button.layer.cornerRadius = 0
-                    button.setAttributedTitle(card.unicodeValue(decodeWidth: decodeWidth, decodeShading: decodeShading, decodeShapes: decodeShapes, decodeColors: decodeColors), for: UIControl.State.normal)
+                    button.setAttributedTitle(unicodeValue(card: card), for: UIControl.State.normal)
                     button.setTitleColor(UIColor.systemRed, for: UIControl.State.normal)
                     button.titleLabel?.font = UIFont.systemFont(ofSize: 2)
                     button.backgroundColor = UIColor.systemMint
@@ -92,14 +109,12 @@ final class ViewController: UIViewController {
         ))
         self.present(gameOverAlert, animated: true)
     }
-}
-extension Card {
-    func unicodeValue(decodeWidth: [Int: Double], decodeShading: [Int: CGFloat], decodeShapes: [Int: String], decodeColors: [Int: UIColor]) -> NSAttributedString {
+    private func unicodeValue(card: Card) -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
-            .strokeWidth: decodeWidth[shading.rawValue]!,
+            .strokeWidth: decodeWidth[card.shading.rawValue]!,
             .foregroundColor:
-                decodeColors[color.rawValue]?.withAlphaComponent(decodeShading[shading.rawValue]!) ?? UIColor.systemBrown]
-        let attributedString = NSAttributedString(string: String(repeating: "\(decodeShapes[shape.rawValue] ?? "")", count: quantity.rawValue + 1), attributes: attributes)
+                decodeColors[card.color.rawValue]?.withAlphaComponent(decodeShading[card.shading.rawValue]!) ?? UIColor.systemBrown]
+        let attributedString = NSAttributedString(string: String(repeating: "\(decodeShapes[card.shape.rawValue] ?? "")", count: card.quantity.rawValue + 1), attributes: attributes)
         return (attributedString)
     }
 }

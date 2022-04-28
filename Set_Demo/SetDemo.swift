@@ -110,7 +110,6 @@ final class SetDemo {
                 for cardIndex in currentSelected {
                     currentCardsOnScreen[cardIndex] = nil
                 }
-                deal3More()
             } else {
                 score -= 3
                 for cardIndex in currentSelected.indices {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Shape: Int, CaseIterable { case triangle = 0, circle, square }
+enum Shape: Int, CaseIterable { case squiggle = 0, diamond, oval }
 enum Quantity: Int, CaseIterable { case one = 0, two, three }
 enum Color: Int, CaseIterable { case purple = 0, red, orange }
 enum Shading: Int, CaseIterable { case striped = 0, solid, open }

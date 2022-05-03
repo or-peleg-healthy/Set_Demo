@@ -22,37 +22,52 @@ import UIKit
     override func draw(_ rect: CGRect) {
         let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: 16.0)
         roundedRect.addClip()
-        UIColor.systemOrange.setFill()
+        UIColor.white.setFill()
         roundedRect.fill()
-        for _ in 0..<card.quantity.rawValue {
-            var drawingOnCard = UIBezierPath()
-            switch card.shape {
-            case .squiggle:
-                drawingOnCard = createSquiggle(rect)
-            case .diamond:
-                drawingOnCard = createDiamond(rect)
-            case .oval:
-                drawingOnCard = createOval(rect)
-            }
-            decodeColors[card.color.rawValue]?.setStroke()
-            drawingOnCard.lineWidth = 3.0
-            drawingOnCard.stroke()
+        let color = decodeColors[card.color.rawValue]
+        var drawingOnCard = UIBezierPath()
+        switch card.shape {
+        case .squiggle:
+            drawingOnCard = createSquiggle(rect.insetBy(dx: CGFloat(3), dy: CGFloat(3)))
+        case .diamond:
+            drawingOnCard = createDiamond(rect.insetBy(dx: CGFloat(3), dy: CGFloat(3)))
+        case .oval:
+            drawingOnCard = createOval(rect.insetBy(dx: CGFloat(3), dy: CGFloat(3)))
         }
+        switch card.shading {
+        case .open:
+            color?.setStroke()
+            drawingOnCard.stroke()
+        case .solid:
+            color?.setFill()
+            drawingOnCard.fill()
+        case .striped:
+            drawingOnCard = addStripes(shape: drawingOnCard, color: color!)
+        }
+        drawingOnCard.lineWidth = 3.0
     }
     
     func createSquiggle(_ bounds: CGRect) -> UIBezierPath {
-        // Based on: https://stackoverflow.com/questions/25387940/how-to-draw-a-perfect-squiggle-in-set-card-game-with-objective-c
-        let startPoint = CGPoint(x: bounds.minX, y: bounds.midY)
-        // Draw the squiggle
         let path = UIBezierPath()
+        let (minX, midX, maxX, minY, midY, maxY) = (bounds.minX, bounds.midX, bounds.maxX, bounds.minY, bounds.midY, bounds.maxY)
+        let startPoint = CGPoint(x: minX, y: (maxY + midY) / 2)
+        let points = [
+        (CGPoint(x: minX, y: (minY + midY) / 2), CGPoint(x: minX, y: (minY + midY) / 2)),
+        (CGPoint(x: midX, y: (minY + midY) / 2), CGPoint(x: (minX + midX) / 2, y: midY)),
+        (CGPoint(x: maxX, y: (minY + midY) / 2), CGPoint(x: (midX + maxX) / 2, y: minY)),
+        (CGPoint(x: maxX, y: (midY + maxY) / 2), CGPoint(x: maxX, y: (midY + maxY) / 2)),
+        (CGPoint(x: midX, y: (midY + maxY) / 2), CGPoint(x: (midX + maxX) / 2, y: midY)),
+        (CGPoint(x: minX, y: (midY + maxY) / 2), CGPoint(x: (minX + midX) / 2, y: maxY)),
+        (CGPoint(x: bounds.minX, y: bounds.midY), CGPoint(x: bounds.minX, y: bounds.midY))
+        ]
         path.move(to: startPoint)
-//        var point = CGPoint(x: startPoint.x , y: startPoint.y)
-//        path.addCurve(to: <#T##CGPoint#>, controlPoint1: <#T##CGPoint#>, controlPoint2: <#T##CGPoint#>)(to: point)
-//        path.move(to: point)
-//        var point = CGPoint(x: startPoint.x , y: startPoint.y)
-        
+        path.addLine(to: points[0].0)
+        path.addQuadCurve(to: points[1].0, controlPoint: points[1].1)
+        path.addQuadCurve(to: points[2].0, controlPoint: points[2].1)
+        path.addLine(to: points[3].0)
+        path.addQuadCurve(to: points[4].0, controlPoint: points[4].1)
+        path.addQuadCurve(to: points[5].0, controlPoint: points[5].1)
         path.close()
-        // Your code to scale, rotate and translate the squiggle
         return path
     }
     
@@ -67,7 +82,6 @@ import UIKit
         path.move(to: startPoint)
         for point in points {
             path.addLine(to: point)
-            path.move(to: point)
         }
         path.close()
         return path
@@ -76,7 +90,21 @@ import UIKit
     func createOval(_ bounds: CGRect) -> UIBezierPath {
         UIBezierPath(ovalIn: bounds)
     }
-    private(set) var decodeColors: [Int: UIColor] = [0: UIColor.green, 1: UIColor.black, 2: UIColor.systemIndigo]
-    private(set) var decodeShading: [Int: CGFloat] = [0: CGFloat(0.30), 1: CGFloat(1), 2: CGFloat(1)]
-    private(set) var decodeWidth: [Int: Double] = [0: 0, 1: 0, 2: 10.0]
+    
+    func addStripes(shape: UIBezierPath, color: UIColor) -> UIBezierPath {
+        let bounds = shape.bounds
+        let stripes = UIBezierPath()
+        for x in stride(from: 0, to: bounds.size.width, by: 10) {
+            stripes.move(to: CGPoint(x: bounds.origin.x + x, y: bounds.origin.y ))
+            stripes.addLine(to: CGPoint(x: bounds.origin.x + x, y: bounds.origin.y + bounds.size.height ))
+        }
+        stripes.lineWidth = 4
+        shape.addClip()
+        color.setStroke()
+        stripes.stroke()
+        shape.stroke()
+        return shape
+    }
+    
+    private(set) var decodeColors: [Int: UIColor] = [0: UIColor.systemOrange, 1: UIColor.systemGreen, 2: UIColor.systemBlue]
 }

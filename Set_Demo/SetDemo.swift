@@ -27,7 +27,7 @@ final class SetDemo {
     }()
     init() {
         shuffledDeck = deck.shuffled()
-        for cardIndex in 0..<24 {
+        for cardIndex in 0..<81 {
             if cardIndex < 12 {
                 let cardToAdd = shuffledDeck[cardIndex]
                 cardToAdd.isOnScreen = true
@@ -37,10 +37,11 @@ final class SetDemo {
             }
         }
     }
-    func deal3More() {
+    func deal3More() -> [Int] {
         checkForMatch()
         var freeScreenSpots: [Int] = []
         var isFreeSpace = 0
+        var newCards: [Int] = []
         while freeScreenSpots.count < 3 {
             if currentCardsOnScreen[isFreeSpace] == nil {
                 freeScreenSpots.append(isFreeSpace)
@@ -51,7 +52,9 @@ final class SetDemo {
             lastCardAdded += 1
             currentCardsOnScreen[freeSpace] = shuffledDeck[lastCardAdded]
             shuffledDeck[lastCardAdded].isOnScreen = true
+            newCards.append(lastCardAdded)
         }
+        return newCards
     }
     func cardWasSelected(at index: Int) -> Bool {
         for cardIndex in currentSelected {

@@ -11,8 +11,11 @@ final class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         cardButtons.append(contentsOf: loadFirstBoard())
-        var frame = (40.0, 100.0, 50.0, 50.0)
-        for playingCardView in cardButtons {
+        updateView(with: cardButtons)
+    }
+    
+    func updateView(with newCards: [UIView]) {
+        for playingCardView in newCards {
             let (x, y, width, height) = frame
             playingCardView.frame = CGRect(x: x, y: y, width: width, height: height)
             playingCardView.backgroundColor = UIColor.clear
@@ -27,13 +30,18 @@ final class ViewController: UIViewController {
     
     private func loadFirstBoard() -> [UIView] {
         game = SetDemo()
-        var playingCardViews: [PlayingCardView] = []
         for indexOfCardOnScreen in 0..<12 {
             playingCardViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
         }
         return playingCardViews
     }
     
+    var playingCardViews: [PlayingCardView] = [] {
+        didSet {
+            view.layoutSubviews()
+        }
+    }
+    var frame = (40.0, 100.0, 50.0, 50.0)
     var cardButtons: [UIView] = []
     private lazy var game = SetDemo()
     private lazy var gameStarted = false
@@ -46,15 +54,19 @@ final class ViewController: UIViewController {
                 if gameEnded {
                     showGameOverAlert()
                 }
-//                updateViewFromModel()
             }
         }
     }
     
     @IBAction private func deal3More(_ sender: UIButton) {
         if gameStarted {
-            game.deal3More()
-//            updateViewFromModel()
+            let newCards = game.deal3More()
+            var newViews: [UIView] = []
+            for indexOfCardOnScreen in newCards {
+                playingCardViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
+                newViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
+            }
+            updateView(with: newViews)
         }
     }
     @IBAction private func newGame(_ sender: Any) {

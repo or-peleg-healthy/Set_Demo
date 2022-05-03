@@ -24,27 +24,30 @@ import UIKit
         roundedRect.addClip()
         UIColor.white.setFill()
         roundedRect.fill()
+        let grid = Grid(layout: .dimensions(rowCount: card.quantity.rawValue + 1, columnCount: 1), frame: roundedRect.bounds.insetBy(dx: 4, dy: 4))
         let color = decodeColors[card.color.rawValue]
-        var drawingOnCard = UIBezierPath()
-        switch card.shape {
-        case .squiggle:
-            drawingOnCard = createSquiggle(rect.insetBy(dx: CGFloat(3), dy: CGFloat(3)))
-        case .diamond:
-            drawingOnCard = createDiamond(rect.insetBy(dx: CGFloat(3), dy: CGFloat(3)))
-        case .oval:
-            drawingOnCard = createOval(rect.insetBy(dx: CGFloat(3), dy: CGFloat(3)))
+        for indexToAdd in 0...card.quantity.rawValue {
+            var drawingOnCard = UIBezierPath()
+            switch card.shape {
+            case .squiggle:
+                drawingOnCard = createSquiggle(grid[indexToAdd]!.insetBy(dx: 3, dy: 3))
+            case .diamond:
+                drawingOnCard = createDiamond(grid[indexToAdd]!.insetBy(dx: 3, dy: 3))
+            case .oval:
+                drawingOnCard = createOval(grid[indexToAdd]!.insetBy(dx: 3, dy: 3))
+            }
+            switch card.shading {
+            case .open:
+                color?.setStroke()
+                drawingOnCard.stroke()
+            case .solid:
+                color?.setFill()
+                drawingOnCard.fill()
+            case .striped:
+                drawingOnCard = addStripes(shape: drawingOnCard, color: color!)
+            }
+            drawingOnCard.lineWidth = 3.0
         }
-        switch card.shading {
-        case .open:
-            color?.setStroke()
-            drawingOnCard.stroke()
-        case .solid:
-            color?.setFill()
-            drawingOnCard.fill()
-        case .striped:
-            drawingOnCard = addStripes(shape: drawingOnCard, color: color!)
-        }
-        drawingOnCard.lineWidth = 3.0
     }
     
     func createSquiggle(_ bounds: CGRect) -> UIBezierPath {

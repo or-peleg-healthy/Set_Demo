@@ -9,15 +9,17 @@ import UIKit
 
 final class ViewController: UIViewController {
     override func viewDidLoad() {
-        grid = Grid(layout: .fixedCellSize(CGSize(width: 45.0, height: 65.0)), frame: boardView.frame)
+        grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.frame)
+        grid.cellCount = 12
         super.viewDidLoad()
-        cardButtons.append(contentsOf: loadFirstBoard())
-        updateView(with: cardButtons)
+        cardButtons = loadFirstBoard()
+        updateView()
     }
     
-    func updateView(with newCards: [UIView]) {
-        for playingCardView in newCards {
-            playingCardView.frame = grid[indexOfCard]!.insetBy(dx: 0.4, dy: 0.4)
+    func updateView() {
+        var indexOfCard = 0
+        for playingCardView in playingCardViews {
+            playingCardView.frame = grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
             indexOfCard += 1
             playingCardView.backgroundColor = UIColor.clear
             view.addSubview(playingCardView)
@@ -36,16 +38,11 @@ final class ViewController: UIViewController {
         return playingCardViews
     }
     
-    var playingCardViews: [PlayingCardView] = [] {
-        didSet {
-            view.layoutSubviews()
-        }
-    }
-    var grid = Grid(layout: .fixedCellSize(CGSize(width: 50.0, height: 50.0)))
+    var playingCardViews: [PlayingCardView] = []
+    var grid = Grid(layout: .aspectRatio(CGFloat(0.7)))
     var cardButtons: [UIView] = []
-    var indexOfCard = 0
     private lazy var game = SetDemo()
-    private lazy var gameStarted = false
+    private lazy var gameStarted = true
     @IBOutlet private weak var scoreLabel: UILabel!
     @IBOutlet private weak var deal3MoreButton: UIButton!
     @IBAction private func touchCard(_ sender: UIButton) {
@@ -65,40 +62,31 @@ final class ViewController: UIViewController {
             let newCards = game.deal3More()
             var newViews: [UIView] = []
             for indexOfCardOnScreen in newCards {
+                grid.cellCount += 1
                 playingCardViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
                 newViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
             }
-            updateView(with: newViews)
+            updateView()
         }
     }
     @IBAction private func newGame(_ sender: Any) {
+        for playingCardView in playingCardViews {
+            playingCardView.removeFromSuperview()
+        }
+        grid.cellCount = 12
+        playingCardViews = []
+        cardButtons = loadFirstBoard()
+        updateView()
         gameStarted = true
-        game = SetDemo()
 //        updateViewFromModel()
         for button in self.cardButtons {
             button.isHidden = false
         }
         deal3MoreButton.isEnabled = true
+        deal3MoreButton.setTitle("Deal 3 More Cards", for: UIControl.State.normal)
     }
     private func updateViewFromModel() {
         scoreLabel.text = "Score: \(game.score)"
-        if game.lastCardAdded == 80 {
-            deal3MoreButton.isEnabled = false
-            deal3MoreButton.setTitle("Deck is Empty", for: UIControl.State.normal)
-        } else {
-            if game.currentCardsOnScreen.contains(nil) {
-                deal3MoreButton.isEnabled = true
-                deal3MoreButton.setTitle("Deal 3 More Cards", for: UIControl.State.normal)
-            } else {
-                if game.currentSelected.isEmpty || !game.currentCardsOnScreen[game.currentSelected[0]]!.isMatched {
-                    deal3MoreButton.isEnabled = false
-                    deal3MoreButton.setTitle("Board is Full", for: UIControl.State.normal)
-                } else {
-                    deal3MoreButton.isEnabled = true
-                    deal3MoreButton.setTitle("Deal 3 More Cards", for: UIControl.State.normal)
-                }
-            }
-        }
         for index in cardButtons.indices {
             let button = cardButtons[index]
             if let card = game.currentCardsOnScreen[index] {

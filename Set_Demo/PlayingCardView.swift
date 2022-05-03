@@ -20,7 +20,7 @@ import UIKit
     }
     
     override func draw(_ rect: CGRect) {
-        let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: 16.0)
+        let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: 10.0)
         roundedRect.addClip()
         UIColor.white.setFill()
         roundedRect.fill()

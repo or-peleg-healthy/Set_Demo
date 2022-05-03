@@ -9,6 +9,7 @@ import UIKit
 
 final class ViewController: UIViewController {
     override func viewDidLoad() {
+        grid = Grid(layout: .fixedCellSize(CGSize(width: 45.0, height: 65.0)), frame: boardView.frame)
         super.viewDidLoad()
         cardButtons.append(contentsOf: loadFirstBoard())
         updateView(with: cardButtons)
@@ -16,14 +17,13 @@ final class ViewController: UIViewController {
     
     func updateView(with newCards: [UIView]) {
         for playingCardView in newCards {
-            let (x, y, width, height) = frame
-            playingCardView.frame = CGRect(x: x, y: y, width: width, height: height)
+            playingCardView.frame = grid[indexOfCard]!.insetBy(dx: 0.4, dy: 0.4)
+            indexOfCard += 1
             playingCardView.backgroundColor = UIColor.clear
             view.addSubview(playingCardView)
-            frame.0 += 60
-            if CGFloat(frame.0) + 60 > view.bounds.maxX {
-                frame.0 = 40.0
-                frame.1 += 60
+            if game.lastCardAdded == 80 {
+                deal3MoreButton.isEnabled = false
+                deal3MoreButton.setTitle("Deck is Empty", for: UIControl.State.normal)
             }
         }
     }
@@ -41,8 +41,9 @@ final class ViewController: UIViewController {
             view.layoutSubviews()
         }
     }
-    var frame = (40.0, 100.0, 50.0, 50.0)
+    var grid = Grid(layout: .fixedCellSize(CGSize(width: 50.0, height: 50.0)))
     var cardButtons: [UIView] = []
+    var indexOfCard = 0
     private lazy var game = SetDemo()
     private lazy var gameStarted = false
     @IBOutlet private weak var scoreLabel: UILabel!
@@ -58,6 +59,7 @@ final class ViewController: UIViewController {
         }
     }
     
+    @IBOutlet private weak var boardView: UIView!
     @IBAction private func deal3More(_ sender: UIButton) {
         if gameStarted {
             let newCards = game.deal3More()

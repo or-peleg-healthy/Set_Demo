@@ -26,6 +26,15 @@ final class ViewController: UIViewController {
         updateView()
     }
     
+    private func loadFirstBoard() -> [PlayingCardView] {
+        game = SetDemo()
+        for indexOfCardOnScreen in 0..<12 {
+            let cardView = PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!)
+            playingCardViews.append(cardView)
+        }
+        return playingCardViews
+    }
+    
     func updateView() {
         var indexOfCard = 0
         for playingCardView in playingCardViews {
@@ -41,22 +50,15 @@ final class ViewController: UIViewController {
         }
     }
     
-    private func loadFirstBoard() -> [PlayingCardView] {
-        game = SetDemo()
-        for indexOfCardOnScreen in 0..<12 {
-            let cardView = PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!)
-            playingCardViews.append(cardView)
-        }
-        return playingCardViews
-    }
-    
     @objc func handleTap(sender: PlayingCardView) {
         if justMatched {
             justMatched = false
-            for index in selectedCardsToRemove {
+            var dec = 0
+            for index in selectedCardsToRemove.sorted() {
                 grid.cellCount -= 1
-                playingCardViews[index].removeFromSuperview()
-                playingCardViews.remove(at: index)
+                playingCardViews[index + dec].removeFromSuperview()
+                playingCardViews.remove(at: index + dec)
+                dec -= 1
             }
             for cardView in playingCardViews {
                 cardView.removeFromSuperview()

@@ -56,10 +56,14 @@ final class SetDemo {
     }
     
     func cardWasSelected(at index: Int) -> (Bool, Bool) {
+        checkForMatch()
+        currentCardsOnScreen = currentCardsOnScreen.filter({ $0 != nil })
+        for _ in 0..<81 - currentCardsOnScreen.count {
+            currentCardsOnScreen.append(nil)
+        }
         for cardIndex in currentSelected {
             currentCardsOnScreen[cardIndex]?.missMatched = false
         }
-        checkForMatch()
         if let selectedCard = currentCardsOnScreen[index] {
             if selectedCard.isSelected {
                 if currentSelected.count < 3 {

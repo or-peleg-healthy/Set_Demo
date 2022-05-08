@@ -6,7 +6,7 @@
 //
 
 import UIKit
-@IBDesignable final class PlayingCardView: UIView {
+@IBDesignable final class PlayingCardView: UIControl {
     var card: Card
     
     required init(card: Card) {
@@ -20,6 +20,7 @@ import UIKit
     }
     
     override func draw(_ rect: CGRect) {
+        let context = UIGraphicsGetCurrentContext()
         let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: 10.0)
         roundedRect.addClip()
         UIColor.white.setFill()
@@ -44,7 +45,9 @@ import UIKit
                 color?.setFill()
                 drawingOnCard.fill()
             case .striped:
+                context?.saveGState()
                 addStripes(shape: drawingOnCard, color: color!)
+                context?.restoreGState()
             }
             drawingOnCard.lineWidth = 3.0
         }
@@ -101,9 +104,10 @@ import UIKit
             stripes.move(to: CGPoint(x: bounds.origin.x + x, y: bounds.origin.y ))
             stripes.addLine(to: CGPoint(x: bounds.origin.x + x, y: bounds.origin.y + bounds.size.height ))
         }
-//        shape.addClip()
+        shape.addClip()
         stripes.lineWidth = 4
         color.setStroke()
+        stripes.stroke()
         shape.append(stripes)
         shape.stroke()
     }

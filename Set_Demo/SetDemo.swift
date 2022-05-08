@@ -30,7 +30,6 @@ final class SetDemo {
         for cardIndex in 0..<81 {
             if cardIndex < 12 {
                 let cardToAdd = shuffledDeck[cardIndex]
-                cardToAdd.isOnScreen = true
                 currentCardsOnScreen.append(cardToAdd)
             } else {
                 currentCardsOnScreen.append(nil)
@@ -51,12 +50,12 @@ final class SetDemo {
         for freeSpace in freeScreenSpots {
             lastCardAdded += 1
             currentCardsOnScreen[freeSpace] = shuffledDeck[lastCardAdded]
-            shuffledDeck[lastCardAdded].isOnScreen = true
             newCards.append(lastCardAdded)
         }
-        return newCards
+        return freeScreenSpots
     }
-    func cardWasSelected(at index: Int) -> Bool {
+    
+    func cardWasSelected(at index: Int) -> (Bool, Bool) {
         for cardIndex in currentSelected {
             currentCardsOnScreen[cardIndex]?.missMatched = false
         }
@@ -84,9 +83,9 @@ final class SetDemo {
             }
         }
         if lastCardAdded > 60 {
-            return didGameEnd()
+            return (isMatch(), didGameEnd())
         } else {
-            return false
+            return (isMatch(), false)
         }
     }
     private func didGameEnd() -> Bool {
@@ -119,7 +118,7 @@ final class SetDemo {
             }
         }
         for dimension in matcher {
-            if dimension.reduce(0, +) == 0 {
+            if dimension.reduce(0, +) != 3 {
                 return false
             }
             for valueWithinDimension in dimension where valueWithinDimension == 2 {

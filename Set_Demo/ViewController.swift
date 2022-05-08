@@ -8,17 +8,28 @@
 import UIKit
 
 final class ViewController: UIViewController {
+    var playingCardViews: [PlayingCardView] = []
+    var grid = Grid(layout: .aspectRatio(CGFloat(0.7)))
+    var justMatched = false
+    var selectedCardsToRemove: [Int] = []
+    private lazy var game = SetDemo()
+    private lazy var gameStarted = true
+    @IBOutlet private weak var scoreLabel: UILabel!
+    @IBOutlet private weak var deal3MoreButton: UIButton!
+    @IBOutlet private weak var boardView: UIView!
+    
     override func viewDidLoad() {
         grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.frame)
         grid.cellCount = 12
         super.viewDidLoad()
-        cardButtons = loadFirstBoard()
+        playingCardViews = loadFirstBoard()
         updateView()
     }
     
     func updateView() {
         var indexOfCard = 0
         for playingCardView in playingCardViews {
+            playingCardView.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
             playingCardView.frame = grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
             indexOfCard += 1
             playingCardView.backgroundColor = UIColor.clear
@@ -30,40 +41,53 @@ final class ViewController: UIViewController {
         }
     }
     
-    private func loadFirstBoard() -> [UIView] {
+    private func loadFirstBoard() -> [PlayingCardView] {
         game = SetDemo()
         for indexOfCardOnScreen in 0..<12 {
-            playingCardViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
+            let cardView = PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!)
+            playingCardViews.append(cardView)
         }
         return playingCardViews
     }
     
-    var playingCardViews: [PlayingCardView] = []
-    var grid = Grid(layout: .aspectRatio(CGFloat(0.7)))
-    var cardButtons: [UIView] = []
-    private lazy var game = SetDemo()
-    private lazy var gameStarted = true
-    @IBOutlet private weak var scoreLabel: UILabel!
-    @IBOutlet private weak var deal3MoreButton: UIButton!
-    @IBAction private func touchCard(_ sender: UIButton) {
-        if gameStarted {
-            if let cardNumber = cardButtons.firstIndex(of: sender) {
-                let gameEnded = game.cardWasSelected(at: cardNumber)
-                if gameEnded {
-                    showGameOverAlert()
-                }
+    @objc func handleTap(sender: PlayingCardView) {
+        if justMatched {
+            justMatched = false
+            for index in selectedCardsToRemove {
+                grid.cellCount -= 1
+                playingCardViews[index].removeFromSuperview()
+                playingCardViews.remove(at: index)
+            }
+            for cardView in playingCardViews {
+                cardView.removeFromSuperview()
+            }
+            updateView()
+        }
+        if let cardNumber = playingCardViews.firstIndex(of: sender) {
+            selectedCardsToRemove.removeAll()
+            let (isMatch, gameEnded) = game.cardWasSelected(at: cardNumber)
+            for index in game.currentSelected {
+                selectedCardsToRemove.append(index)
+            }
+            if isMatch {
+                justMatched = true
+            }
+            updateViewFromModel()
+            if gameEnded {
+                showGameOverAlert()
             }
         }
     }
-    
-    @IBOutlet private weak var boardView: UIView!
+
     @IBAction private func deal3More(_ sender: UIButton) {
         if gameStarted {
             let newCards = game.deal3More()
             var newViews: [UIView] = []
             for indexOfCardOnScreen in newCards {
                 grid.cellCount += 1
-                playingCardViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
+                let cardView = PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!)
+                cardView.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
+                playingCardViews.append(cardView)
                 newViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
             }
             updateView()
@@ -73,59 +97,46 @@ final class ViewController: UIViewController {
         for playingCardView in playingCardViews {
             playingCardView.removeFromSuperview()
         }
+        playingCardViews.removeAll()
         grid.cellCount = 12
-        playingCardViews = []
-        cardButtons = loadFirstBoard()
+        playingCardViews = loadFirstBoard()
         updateView()
         gameStarted = true
-        for button in self.cardButtons {
+        updateViewFromModel()
+        for button in self.playingCardViews {
             button.isHidden = false
         }
         deal3MoreButton.isEnabled = true
         deal3MoreButton.setTitle("Deal 3 More Cards", for: UIControl.State.normal)
     }
+
     private func updateViewFromModel() {
-        scoreLabel.text = "Score: \(game.score)"
-        for index in cardButtons.indices {
-            let button = cardButtons[index]
-            if let card = game.currentCardsOnScreen[index] {
-                if card.isOnScreen {
-                    button.layer.cornerRadius = 0
-//                    button.setAttributedTitle(unicodeValue(card: card), for: UIControl.State.normal)
-//                    button.setTitleColor(UIColor.systemRed, for: UIControl.State.normal)
-//                    button.titleLabel?.font = UIFont.systemFont(ofSize: 2)
-                    button.backgroundColor = UIColor.systemMint
-                    if card.isSelected {
-                        button.layer.borderWidth = 3.0
-                        if card.isMatched {
-                            button.layer.cornerRadius = 50.0
-                        }
-                        if card.missMatched {
-                            button.layer.borderColor = UIColor.red.cgColor
-                        } else {
-                        button.layer.borderColor = UIColor.green.cgColor
-                        }
+    scoreLabel.text = "Score: \(game.score)"
+    for index in playingCardViews.indices {
+        let button = playingCardViews[index]
+        if let card = game.currentCardsOnScreen[index] {
+                button.layer.cornerRadius = 0
+                if card.isSelected {
+                    button.layer.borderWidth = 3.0
+                    if card.isMatched {
+                        button.layer.borderWidth = 10.0
+                    }
+                    if card.missMatched {
+                        button.layer.borderColor = UIColor.red.cgColor
                     } else {
-                        button.layer.borderWidth = 0
-                        button.layer.borderColor = UIColor.systemGray.cgColor
+                    button.layer.borderColor = UIColor.green.cgColor
                     }
-                    if !card.isInGame {
-//                        button.setTitle("", for: UIControl.State.normal)
-                        game.currentCardsOnScreen[index] = nil
-                    }
+                } else {
+                    button.layer.borderWidth = 0
+                    button.layer.borderColor = UIColor.systemGray.cgColor
                 }
-            } else {
-                button.backgroundColor = UIColor.systemGray
-//                button.setAttributedTitle(NSAttributedString(""), for: UIControl.State.normal)
-                button.layer.borderWidth = 0
-                button.layer.borderColor = UIColor.systemGray.cgColor
             }
         }
     }
     private func showGameOverAlert() {
         let gameOverAlert = UIAlertController(title: "Game Over !! \n no more matches can be composed! \n you final score is \(game.score)", message: nil, preferredStyle: .alert)
         gameOverAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-            for button in self.cardButtons {
+            for button in self.playingCardViews {
                 button.isHidden = true
             }
             self.deal3MoreButton.isEnabled = false

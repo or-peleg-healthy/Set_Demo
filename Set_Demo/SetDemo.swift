@@ -37,22 +37,34 @@ final class SetDemo {
         }
     }
     func deal3More() -> [Int] {
-        checkForMatch()
-        var freeScreenSpots: [Int] = []
-        var isFreeSpace = 0
-        var newCards: [Int] = []
-        while freeScreenSpots.count < 3 {
-            if currentCardsOnScreen[isFreeSpace] == nil {
-                freeScreenSpots.append(isFreeSpace)
+        if lastCardAdded < 80 {
+            checkForMatch()
+            var freeScreenSpots: [Int] = []
+            var isFreeSpace = 0
+            var newCards: [Int] = []
+            while freeScreenSpots.count < 3 {
+                if currentCardsOnScreen[isFreeSpace] == nil {
+                    freeScreenSpots.append(isFreeSpace)
+                }
+                isFreeSpace += 1
             }
-            isFreeSpace += 1
+            for freeSpace in freeScreenSpots {
+                lastCardAdded += 1
+                currentCardsOnScreen[freeSpace] = shuffledDeck[lastCardAdded]
+                newCards.append(lastCardAdded)
+            }
+            return freeScreenSpots
         }
-        for freeSpace in freeScreenSpots {
-            lastCardAdded += 1
-            currentCardsOnScreen[freeSpace] = shuffledDeck[lastCardAdded]
-            newCards.append(lastCardAdded)
+        return []
+    }
+    
+    func shuffleScreen() {
+        checkForMatch()
+        for indexOfCard in currentSelected {
+            currentCardsOnScreen[indexOfCard]?.isSelected = false
         }
-        return freeScreenSpots
+        currentSelected.removeAll()
+        currentCardsOnScreen.shuffle()
     }
     
     func cardWasSelected(at index: Int) -> (Bool, Bool) {
@@ -111,7 +123,7 @@ final class SetDemo {
         currentSelected = tmpSelectedCards
         return true
     }
-    private func isMatch() -> Bool {
+    func isMatch() -> Bool {
         var matcher: [[Int]] = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
         for index in currentSelected {
             if let card = currentCardsOnScreen[index] {

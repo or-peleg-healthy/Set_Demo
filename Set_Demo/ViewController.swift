@@ -19,12 +19,40 @@ final class ViewController: UIViewController {
     @IBOutlet private weak var boardView: UIView!
     
     override func viewDidLoad() {
+        deal3MoreButton.isEnabled = false
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(deal3More(sender:)))
+        swipeDown.direction = .down
+        let rotationGesture = UIRotationGestureRecognizer(target: self, action: #selector(shuffle(sender:)))
+        self.view.addGestureRecognizer(rotationGesture)
+        self.view.addGestureRecognizer(swipeDown)
         grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.frame)
         grid.cellCount = 12
         super.viewDidLoad()
         playingCardViews = loadFirstBoard()
         updateView()
     }
+//
+//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//        let lastCellCount = grid.cellCount
+//        if UIDevice.current.orientation.isLandscape {
+//            grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: CGRect(x: boardView.frame.maxX, y: boardView.frame.minY, width: boardView.frame.height, height: boardView.frame.width))
+//            grid.cellCount = lastCellCount
+//            for playingCardView in playingCardViews {
+//                playingCardView.removeFromSuperview()
+//            }
+//            view.layoutSubviews()
+//            view.setNeedsDisplay()
+//            updateView()
+//        } else {
+//            grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.frame)
+//            grid.cellCount = lastCellCount
+//            for playingCardView in playingCardViews {
+//                playingCardView.removeFromSuperview()
+//            }
+//            updateView()
+//            view.layoutSubviews()
+//        }
+//    }
     
     private func loadFirstBoard() -> [PlayingCardView] {
         game = SetDemo()
@@ -68,6 +96,7 @@ final class ViewController: UIViewController {
         if let cardNumber = playingCardViews.firstIndex(of: sender) {
             selectedCardsToRemove.removeAll()
             let (isMatch, gameEnded) = game.cardWasSelected(at: cardNumber)
+            print(cardNumber)
             for index in game.currentSelected {
                 selectedCardsToRemove.append(index)
             }
@@ -80,8 +109,8 @@ final class ViewController: UIViewController {
             }
         }
     }
-
-    @IBAction private func deal3More(_ sender: UIButton) {
+    
+    @objc func deal3More(sender: UIView) {
         if gameStarted {
             let newCards = game.deal3More()
             var newViews: [UIView] = []
@@ -95,6 +124,26 @@ final class ViewController: UIViewController {
             updateView()
         }
     }
+    
+    @objc func shuffle(sender: UIView) {
+        if game.isMatch() {
+            return
+        }
+        game.shuffleScreen()
+        for playingCardView in playingCardViews {
+            playingCardView.removeFromSuperview()
+        }
+        playingCardViews.removeAll()
+        for cardOnScreen in game.currentCardsOnScreen {
+            if let card = cardOnScreen {
+                let cardView = PlayingCardView(card: card)
+                playingCardViews.append(cardView)
+            }
+        }
+        updateView()
+        updateViewFromModel()
+    }
+    
     @IBAction private func newGame(_ sender: Any) {
         for playingCardView in playingCardViews {
             playingCardView.removeFromSuperview()
@@ -108,8 +157,8 @@ final class ViewController: UIViewController {
         for button in self.playingCardViews {
             button.isHidden = false
         }
-        deal3MoreButton.isEnabled = true
-        deal3MoreButton.setTitle("Deal 3 More Cards", for: UIControl.State.normal)
+        deal3MoreButton.isEnabled = false
+        deal3MoreButton.setTitle("More Cards to Deal", for: UIControl.State.normal)
     }
 
     private func updateViewFromModel() {

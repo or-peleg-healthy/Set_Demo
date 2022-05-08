@@ -44,7 +44,7 @@ import UIKit
                 color?.setFill()
                 drawingOnCard.fill()
             case .striped:
-                drawingOnCard = addStripes(shape: drawingOnCard, color: color!)
+                addStripes(shape: drawingOnCard, color: color!)
             }
             drawingOnCard.lineWidth = 3.0
         }
@@ -94,19 +94,18 @@ import UIKit
         UIBezierPath(ovalIn: bounds)
     }
     
-    func addStripes(shape: UIBezierPath, color: UIColor) -> UIBezierPath {
+    func addStripes(shape: UIBezierPath, color: UIColor) {
         let bounds = shape.bounds
         let stripes = UIBezierPath()
         for x in stride(from: 0, to: bounds.size.width, by: 10) {
             stripes.move(to: CGPoint(x: bounds.origin.x + x, y: bounds.origin.y ))
             stripes.addLine(to: CGPoint(x: bounds.origin.x + x, y: bounds.origin.y + bounds.size.height ))
         }
+//        shape.addClip()
         stripes.lineWidth = 4
-        shape.addClip()
         color.setStroke()
-        stripes.stroke()
+        shape.append(stripes)
         shape.stroke()
-        return shape
     }
     
     private(set) var decodeColors: [Int: UIColor] = [0: UIColor.systemOrange, 1: UIColor.systemGreen, 2: UIColor.systemBlue]

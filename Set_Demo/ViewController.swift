@@ -78,7 +78,6 @@ final class ViewController: UIViewController {
         cardButtons = loadFirstBoard()
         updateView()
         gameStarted = true
-//        updateViewFromModel()
         for button in self.cardButtons {
             button.isHidden = false
         }

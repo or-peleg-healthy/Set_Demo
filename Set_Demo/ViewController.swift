@@ -15,11 +15,9 @@ final class ViewController: UIViewController {
     private lazy var game = SetDemo()
     private lazy var gameStarted = true
     @IBOutlet private weak var scoreLabel: UILabel!
-    @IBOutlet private weak var deal3MoreButton: UIButton!
     @IBOutlet private weak var boardView: UIView!
     
     override func viewDidLoad() {
-        deal3MoreButton.isEnabled = false
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(deal3More(sender:)))
         swipeDown.direction = .down
         let rotationGesture = UIRotationGestureRecognizer(target: self, action: #selector(shuffle(sender:)))
@@ -71,10 +69,6 @@ final class ViewController: UIViewController {
             indexOfCard += 1
             playingCardView.backgroundColor = UIColor.clear
             view.addSubview(playingCardView)
-            if game.lastCardAdded == 80 {
-                deal3MoreButton.isEnabled = false
-                deal3MoreButton.setTitle("Deck is Empty", for: UIControl.State.normal)
-            }
         }
     }
     
@@ -112,15 +106,19 @@ final class ViewController: UIViewController {
     @objc func deal3More(sender: UIView) {
         if gameStarted {
             let newCards = game.deal3More()
-            var newViews: [UIView] = []
-            for indexOfCardOnScreen in newCards {
-                grid.cellCount += 1
-                let cardView = PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!)
-                cardView.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
-                playingCardViews.append(cardView)
-                newViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
+            if newCards.isEmpty {
+                noMoreCardsToDealAlert()
+            } else {
+                var newViews: [UIView] = []
+                for indexOfCardOnScreen in newCards {
+                    grid.cellCount += 1
+                    let cardView = PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!)
+                    cardView.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
+                    playingCardViews.append(cardView)
+                    newViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
+                }
+                updateView()
             }
-            updateView()
         }
     }
     
@@ -156,8 +154,6 @@ final class ViewController: UIViewController {
         for button in self.playingCardViews {
             button.isHidden = false
         }
-        deal3MoreButton.isEnabled = false
-        deal3MoreButton.setTitle("More Cards to Deal", for: UIControl.State.normal)
     }
 
     private func updateViewFromModel() {
@@ -194,5 +190,10 @@ final class ViewController: UIViewController {
         }
         ))
         self.present(gameOverAlert, animated: true)
+    }
+    private func noMoreCardsToDealAlert() {
+        let noMoreCardsAlert = UIAlertController(title: "The Deck is Empty", message: nil, preferredStyle: .alert)
+        noMoreCardsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in }))
+        self.present(noMoreCardsAlert, animated: true)
     }
 }

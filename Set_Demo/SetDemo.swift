@@ -9,39 +9,26 @@ import Foundation
 final class SetDemo {
     private(set) var score = 0
     private(set) var currentSelected: [Int] = []
-    var currentCardsOnScreen: [Card?] = []
-    private var shuffledDeck: [Card] = []
-    private(set) var lastCardAdded = 11
-    private var deck: [Card] = {
-        var tempDeck: [Card] = []
-        for shape in Shape.allCases {
-            for quantity in Quantity.allCases {
-                for color in Color.allCases {
-                    for shading in Shading.allCases {
-                        tempDeck.append(Card(shape: shape, quantity: quantity, color: color, shading: shading))
-                    }
-                }
-            }
-        }
-        return tempDeck
-    }()
+    private(set) var currentMatch: [Int] = []
+    private(set) var currentMissMatch: [Int] = []
+    private(set) var currentCardsOnScreen: [Card?] = []
+    private var deck = Deck()
+
     init() {
-        shuffledDeck = deck.shuffled()
+        deck.shuffleDeck()
         for cardIndex in 0..<81 {
             if cardIndex < 12 {
-                let cardToAdd = shuffledDeck[cardIndex]
-                currentCardsOnScreen.append(cardToAdd)
+                currentCardsOnScreen.append(deck.draw())
             } else {
                 currentCardsOnScreen.append(nil)
             }
         }
     }
     func deal3More() -> [Int] {
-        if lastCardAdded < 80 {
+        if deck.hasAvailableCardsToDraw() {
             checkForMatch()
             var freeScreenSpots: [Int] = []
             var isFreeSpace = 0
-            var newCards: [Int] = []
             while freeScreenSpots.count < 3 {
                 if currentCardsOnScreen[isFreeSpace] == nil {
                     freeScreenSpots.append(isFreeSpace)
@@ -49,9 +36,7 @@ final class SetDemo {
                 isFreeSpace += 1
             }
             for freeSpace in freeScreenSpots {
-                lastCardAdded += 1
-                currentCardsOnScreen[freeSpace] = shuffledDeck[lastCardAdded]
-                newCards.append(lastCardAdded)
+                currentCardsOnScreen[freeSpace] = deck.draw()
             }
             return freeScreenSpots
         }
@@ -98,14 +83,14 @@ final class SetDemo {
                 }
             }
         }
-        if lastCardAdded > 60 {
+        if deck.count() > 60 {
             return (isMatch(), didGameEnd())
         } else {
             return (isMatch(), false)
         }
     }
     private func didGameEnd() -> Bool {
-        if isMatch(), lastCardAdded > 79 {
+        if isMatch(), !deck.hasAvailableCardsToDraw() {
             let lastThreeCards = currentCardsOnScreen.filter { $0 != nil }
             if lastThreeCards.count == 3 {
                 score += 5

@@ -18,10 +18,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="Fc7-de-aJD">
-                                <rect key="frame" x="54.5" y="789" width="305" height="72.5"/>
+                                <rect key="frame" x="160" y="789" width="94.5" height="72.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bMI-PC-ccH">
-                                        <rect key="frame" x="132" y="0.0" width="41.5" height="20.5"/>
+                                        <rect key="frame" x="26.5" y="0.0" width="41.5" height="20.5"/>
                                         <color key="backgroundColor" red="0.0" green="0.78039215689999997" blue="0.74509803919999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -29,23 +29,13 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleAspectFill" axis="vertical" distribution="fillEqually" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="0KZ-Kn-wjR">
-                                        <rect key="frame" x="0.0" y="41.5" width="305" height="31"/>
+                                        <rect key="frame" x="0.0" y="41.5" width="94.5" height="31"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="CxK-ca-EsJ">
-                                                <rect key="frame" x="0.0" y="0.0" width="305" height="31"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="94.5" height="31"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CiP-kI-sHd">
-                                                        <rect key="frame" x="0.0" y="0.0" width="148.5" height="31"/>
-                                                        <color key="backgroundColor" systemColor="systemMintColor"/>
-                                                        <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <state key="normal" title="Button"/>
-                                                        <buttonConfiguration key="configuration" style="plain" title="More Cards to Deal"/>
-                                                        <connections>
-                                                            <action selector="deal3More:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vzu-Gw-zrv"/>
-                                                        </connections>
-                                                    </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kE9-nq-XAY">
-                                                        <rect key="frame" x="156.5" y="0.0" width="148.5" height="31"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="94.5" height="31"/>
                                                         <color key="backgroundColor" systemColor="systemMintColor"/>
                                                         <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <state key="normal" title="Button"/>
@@ -79,7 +69,6 @@
                     </view>
                     <connections>
                         <outlet property="boardView" destination="KIw-7M-IgS" id="R1W-Tx-yCA"/>
-                        <outlet property="deal3MoreButton" destination="CiP-kI-sHd" id="AVh-TC-fk6"/>
                         <outlet property="scoreLabel" destination="bMI-PC-ccH" id="maB-XX-lOd"/>
                     </connections>
                 </viewController>

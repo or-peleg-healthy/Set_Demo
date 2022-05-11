@@ -12,7 +12,7 @@ enum Quantity: Int, CaseIterable { case one = 0, two, three }
 enum Color: Int, CaseIterable { case purple = 0, red, orange }
 enum Shading: Int, CaseIterable { case striped = 0, solid, open }
 
-final class Card: Hashable {
+struct Card: Hashable {
     init(shape: Shape, quantity: Quantity, color: Color, shading: Shading) {
         self.shape = shape
         self.quantity = quantity
@@ -31,8 +31,4 @@ final class Card: Hashable {
     let color: Color
     let shading: Shading
     private let identifier: Int
-    var isSelected = false
-    var isMatched = false
-    var missMatched = false
-    var isInGame = true
 }

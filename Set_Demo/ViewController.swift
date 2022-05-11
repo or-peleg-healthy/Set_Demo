@@ -13,23 +13,167 @@ final class ViewController: UIViewController {
     var justMatched = false
     var selectedCardsToRemove: [Int] = []
     private lazy var game = SetDemo()
-    private lazy var gameStarted = true
     @IBOutlet private weak var scoreLabel: UILabel!
     @IBOutlet private weak var boardView: UIView!
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        let rotationGesture = UIRotationGestureRecognizer(target: self, action: #selector(shuffle(sender:)))
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(deal3More(sender:)))
         swipeDown.direction = .down
-        let rotationGesture = UIRotationGestureRecognizer(target: self, action: #selector(shuffle(sender:)))
         self.view.addGestureRecognizer(rotationGesture)
         self.view.addGestureRecognizer(swipeDown)
-        grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.frame)
-        grid.cellCount = 12
-        super.viewDidLoad()
         playingCardViews = loadFirstBoard()
         updateView()
     }
-//
+    
+    private func loadFirstBoard() -> [PlayingCardView] {
+        game = SetDemo()
+        scoreLabel.text = "Score: \(game.score)"
+        grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.frame)
+        grid.cellCount = 12
+        for indexOfCardOnScreen in 0..<12 {
+            let cardView = PlayingCardView(card: (game.board[indexOfCardOnScreen])!)
+            cardView.layer.borderWidth = 1.5
+            cardView.layer.borderColor = UIColor.clear.cgColor
+            cardView.layer.cornerRadius = 1
+            let swipeDown = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+            cardView.addGestureRecognizer(swipeDown)
+            playingCardViews.append(cardView)
+        }
+        return playingCardViews
+    }
+    
+    func updateView() {
+        var indexOfCard = 0
+        for playingCardView in playingCardViews {
+            playingCardView.frame = grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
+            indexOfCard += 1
+            playingCardView.backgroundColor = UIColor.clear
+            view.addSubview(playingCardView)
+        }
+    }
+    
+    @IBAction private func newGame(_ sender: Any) {
+        for playingCardView in playingCardViews {
+            playingCardView.removeFromSuperview()
+        }
+        selectedCardsToRemove.removeAll()
+        playingCardViews.removeAll()
+        playingCardViews = loadFirstBoard()
+        updateView()
+        updateViewFromModel()
+    }
+    
+    @objc func handleTap(sender: UITapGestureRecognizer) {
+        if justMatched {
+            justMatched = false
+            var dec = 0
+            for index in selectedCardsToRemove.sorted() {
+                grid.cellCount -= 1
+                playingCardViews[index + dec].removeFromSuperview()
+                playingCardViews.remove(at: index + dec)
+                dec -= 1
+            }
+            for cardView in playingCardViews {
+                cardView.removeFromSuperview()
+            }
+            updateView()
+        }
+        let playingCardView = sender.view as? PlayingCardView
+        if let cardNumber = playingCardViews.firstIndex(of: playingCardView!) {
+            selectedCardsToRemove.removeAll()
+            let (selectedCardsMatch, gameEnded) = game.cardWasSelected(at: cardNumber)
+            for index in game.currentSelectedCards {
+                selectedCardsToRemove.append(index)
+            }
+            if selectedCardsMatch {
+                justMatched = true
+            }
+            updateViewFromModel()
+            if gameEnded {
+                showGameOverAlert()
+            }
+        }
+    }
+    
+    @objc func deal3More(sender: UIView) {
+        let newCards = game.deal3More()
+        if newCards.isEmpty {
+            noMoreCardsToDealAlert()
+        } else {
+            for indexOfCardOnScreen in newCards {
+                grid.cellCount += 1
+                let cardView = PlayingCardView(card: (game.board[indexOfCardOnScreen])!)
+                cardView.layer.borderWidth = 1.5
+                cardView.layer.borderColor = UIColor.clear.cgColor
+                cardView.layer.cornerRadius = 1
+                let swipeDown = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+                cardView.addGestureRecognizer(swipeDown)
+                playingCardViews.append(cardView)
+            }
+            updateView()
+        }
+    }
+    
+    @objc func shuffle(sender: UIView) {
+        if game.selectedCardsMatch() {
+            return
+        }
+        game.shuffleScreen()
+        for playingCardView in playingCardViews {
+            playingCardView.removeFromSuperview()
+        }
+        playingCardViews.removeAll()
+        for cardOnScreen in game.board {
+            if let card = cardOnScreen {
+                let cardView = PlayingCardView(card: card)
+                let swipeDown = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+                cardView.addGestureRecognizer(swipeDown)
+                playingCardViews.append(cardView)
+            }
+        }
+        updateView()
+        updateViewFromModel()
+    }
+
+    private func updateViewFromModel() {
+        scoreLabel.text = "Score: \(game.score)"
+        for indexOfCard in playingCardViews.indices {
+            let cardView = playingCardViews[indexOfCard]
+            if game.currentSelectedCards.contains(indexOfCard) {
+                cardView.layer.borderColor = UIColor.green.cgColor
+                if game.currentMatchedCards.contains(indexOfCard) {
+                    cardView.layer.borderWidth = 10.0
+                } else if game.currentMissMatchedCards.contains(indexOfCard) {
+                    cardView.layer.borderColor = UIColor.red.cgColor
+                }
+            } else {
+                cardView.layer.borderWidth = 1
+                cardView.layer.borderColor = UIColor.clear.cgColor
+            }
+        }
+    }
+    
+    private func showGameOverAlert() {
+        let gameOverAlert = UIAlertController(title: "Game Over !! \n no more matches can be composed! \n you final score is \(game.score)", message: nil, preferredStyle: .alert)
+        gameOverAlert.addAction(UIAlertAction(title: "New Game", style: .default, handler: { [self] _ in
+            newGame((Any).self)
+        }
+        ))
+        gameOverAlert.addAction(UIAlertAction(title: "Quit", style: .default, handler: { _ in
+            UIControl().sendAction(#selector(NSXPCConnection.suspend), to: UIApplication.shared, for: nil)
+        }
+        ))
+        self.present(gameOverAlert, animated: true)
+    }
+    private func noMoreCardsToDealAlert() {
+        let noMoreCardsAlert = UIAlertController(title: "The Deck is Empty", message: nil, preferredStyle: .alert)
+        noMoreCardsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in }))
+        self.present(noMoreCardsAlert, animated: true)
+    }
+}
+
 //    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 //        let lastCellCount = grid.cellCount
 //        if UIDevice.current.orientation.isLandscape {
@@ -51,149 +195,3 @@ final class ViewController: UIViewController {
 //            view.layoutSubviews()
 //        }
 //    }
-    
-    private func loadFirstBoard() -> [PlayingCardView] {
-        game = SetDemo()
-        for indexOfCardOnScreen in 0..<12 {
-            let cardView = PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!)
-            playingCardViews.append(cardView)
-        }
-        return playingCardViews
-    }
-    
-    func updateView() {
-        var indexOfCard = 0
-        for playingCardView in playingCardViews {
-            playingCardView.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
-            playingCardView.frame = grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
-            indexOfCard += 1
-            playingCardView.backgroundColor = UIColor.clear
-            view.addSubview(playingCardView)
-        }
-    }
-    
-    @objc func handleTap(sender: PlayingCardView) {
-        if justMatched {
-            justMatched = false
-            var dec = 0
-            for index in selectedCardsToRemove.sorted() {
-                grid.cellCount -= 1
-                playingCardViews[index + dec].removeFromSuperview()
-                playingCardViews.remove(at: index + dec)
-                dec -= 1
-            }
-            for cardView in playingCardViews {
-                cardView.removeFromSuperview()
-            }
-            updateView()
-        }
-        if let cardNumber = playingCardViews.firstIndex(of: sender) {
-            selectedCardsToRemove.removeAll()
-            let (isMatch, gameEnded) = game.cardWasSelected(at: cardNumber)
-            for index in game.currentSelected {
-                selectedCardsToRemove.append(index)
-            }
-            if isMatch {
-                justMatched = true
-            }
-            updateViewFromModel()
-            if gameEnded {
-                showGameOverAlert()
-            }
-        }
-    }
-    
-    @objc func deal3More(sender: UIView) {
-        if gameStarted {
-            let newCards = game.deal3More()
-            if newCards.isEmpty {
-                noMoreCardsToDealAlert()
-            } else {
-                var newViews: [UIView] = []
-                for indexOfCardOnScreen in newCards {
-                    grid.cellCount += 1
-                    let cardView = PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!)
-                    cardView.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
-                    playingCardViews.append(cardView)
-                    newViews.append(PlayingCardView(card: (game.currentCardsOnScreen[indexOfCardOnScreen])!))
-                }
-                updateView()
-            }
-        }
-    }
-    
-    @objc func shuffle(sender: UIView) {
-        if game.isMatch() {
-            return
-        }
-        game.shuffleScreen()
-        for playingCardView in playingCardViews {
-            playingCardView.removeFromSuperview()
-        }
-        playingCardViews.removeAll()
-        for cardOnScreen in game.currentCardsOnScreen {
-            if let card = cardOnScreen {
-                let cardView = PlayingCardView(card: card)
-                playingCardViews.append(cardView)
-            }
-        }
-        updateView()
-        updateViewFromModel()
-    }
-    
-    @IBAction private func newGame(_ sender: Any) {
-        for playingCardView in playingCardViews {
-            playingCardView.removeFromSuperview()
-        }
-        playingCardViews.removeAll()
-        grid.cellCount = 12
-        playingCardViews = loadFirstBoard()
-        updateView()
-        gameStarted = true
-        updateViewFromModel()
-        for button in self.playingCardViews {
-            button.isHidden = false
-        }
-    }
-
-    private func updateViewFromModel() {
-    scoreLabel.text = "Score: \(game.score)"
-    for index in playingCardViews.indices {
-        let button = playingCardViews[index]
-        if let card = game.currentCardsOnScreen[index] {
-                button.layer.cornerRadius = 0
-                if card.isSelected {
-                    button.layer.borderWidth = 3.0
-                    if card.isMatched {
-                        button.layer.borderWidth = 10.0
-                    }
-                    if card.missMatched {
-                        button.layer.borderColor = UIColor.red.cgColor
-                    } else {
-                    button.layer.borderColor = UIColor.green.cgColor
-                    }
-                } else {
-                    button.layer.borderWidth = 0
-                    button.layer.borderColor = UIColor.systemGray.cgColor
-                }
-            }
-        }
-    }
-    private func showGameOverAlert() {
-        let gameOverAlert = UIAlertController(title: "Game Over !! \n no more matches can be composed! \n you final score is \(game.score)", message: nil, preferredStyle: .alert)
-        gameOverAlert.addAction(UIAlertAction(title: "New Game", style: .default, handler: { [self] _ in
-            newGame((Any).self)
-        }
-        ))
-        gameOverAlert.addAction(UIAlertAction(title: "Quit", style: .default, handler: { _ in
-            UIControl().sendAction(#selector(NSXPCConnection.suspend), to: UIApplication.shared, for: nil)
-        }
-        ))
-        self.present(gameOverAlert, animated: true)
-    }
-    private func noMoreCardsToDealAlert() {
-        let noMoreCardsAlert = UIAlertController(title: "The Deck is Empty", message: nil, preferredStyle: .alert)
-        noMoreCardsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in }))
-        self.present(noMoreCardsAlert, animated: true)
-    }
-}

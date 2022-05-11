@@ -26,7 +26,7 @@ struct Deck {
         cards[index]
     }
     
-    mutating func shuffleDeck() {
+    mutating func shuffle() {
         cards.shuffle()
     }
     

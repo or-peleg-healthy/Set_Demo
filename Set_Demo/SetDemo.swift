@@ -8,35 +8,36 @@
 import Foundation
 final class SetDemo {
     private(set) var score = 0
-    private(set) var currentSelected: [Int] = []
-    private(set) var currentMatch: [Int] = []
-    private(set) var currentMissMatch: [Int] = []
-    private(set) var currentCardsOnScreen: [Card?] = []
+    private(set) var currentSelectedCards: [Int] = []
+    private(set) var currentMatchedCards: [Int] = []
+    private(set) var currentMissMatchedCards: [Int] = []
+    private(set) var board: [Card?] = []
     private var deck = Deck()
 
     init() {
-        deck.shuffleDeck()
+        deck.shuffle()
         for cardIndex in 0..<81 {
             if cardIndex < 12 {
-                currentCardsOnScreen.append(deck.draw())
+                board.append(deck.draw())
             } else {
-                currentCardsOnScreen.append(nil)
+                board.append(nil)
             }
         }
     }
+    
     func deal3More() -> [Int] {
         if deck.hasAvailableCardsToDraw() {
             checkForMatch()
             var freeScreenSpots: [Int] = []
             var isFreeSpace = 0
             while freeScreenSpots.count < 3 {
-                if currentCardsOnScreen[isFreeSpace] == nil {
+                if board[isFreeSpace] == nil {
                     freeScreenSpots.append(isFreeSpace)
                 }
                 isFreeSpace += 1
             }
             for freeSpace in freeScreenSpots {
-                currentCardsOnScreen[freeSpace] = deck.draw()
+                board[freeSpace] = deck.draw()
             }
             return freeScreenSpots
         }
@@ -45,80 +46,74 @@ final class SetDemo {
     
     func shuffleScreen() {
         checkForMatch()
-        for indexOfCard in currentSelected {
-            currentCardsOnScreen[indexOfCard]?.isSelected = false
-        }
-        currentSelected.removeAll()
-        currentCardsOnScreen.shuffle()
+        currentSelectedCards.removeAll()
+        board.shuffle()
     }
     
     func cardWasSelected(at index: Int) -> (Bool, Bool) {
+        currentMatchedCards.removeAll()
+        currentMissMatchedCards.removeAll()
         checkForMatch()
-        currentCardsOnScreen = currentCardsOnScreen.filter({ $0 != nil })
-        for _ in 0..<81 - currentCardsOnScreen.count {
-            currentCardsOnScreen.append(nil)
+        board = board.filter({ $0 != nil })
+        for _ in 0..<81 - board.count {
+            board.append(nil)
         }
-        for cardIndex in currentSelected {
-            currentCardsOnScreen[cardIndex]?.missMatched = false
-        }
-        if let selectedCard = currentCardsOnScreen[index] {
-            if selectedCard.isSelected {
-                if currentSelected.count < 3 {
-                    selectedCard.isSelected = false
-                    currentSelected.remove(at: currentSelected.firstIndex(of: index)!)
+        if board[index] != nil {
+            if currentSelectedCards.contains(index) {
+                if currentSelectedCards.count < 3 {
+                    currentSelectedCards.remove(at: currentSelectedCards.firstIndex(of: index)!)
                 }
-                } else {
-                    selectedCard.isSelected = true
-                    currentSelected.append(index)
-                    if currentSelected.count == 3 {
-                        if isMatch() {
-                        for cardIndex in currentSelected {
-                            currentCardsOnScreen[cardIndex]?.isMatched = true
+            } else {
+                currentSelectedCards.append(index)
+                if currentSelectedCards.count == 3 {
+                    if selectedCardsMatch() {
+                        for cardIndex in currentSelectedCards {
+                            currentMatchedCards.append(cardIndex)
                             }
                         } else {
-                            for cardIndex in currentSelected {
-                                currentCardsOnScreen[cardIndex]?.missMatched = true
-                            }
+                            for cardIndex in currentSelectedCards {
+                                currentMissMatchedCards.append(cardIndex)
                         }
+                    }
                 }
             }
         }
         if deck.count() > 60 {
-            return (isMatch(), didGameEnd())
+            return (selectedCardsMatch(), didGameEnd())
         } else {
-            return (isMatch(), false)
+            return (selectedCardsMatch(), false)
         }
     }
     private func didGameEnd() -> Bool {
-        if isMatch(), !deck.hasAvailableCardsToDraw() {
-            let lastThreeCards = currentCardsOnScreen.filter { $0 != nil }
+        if selectedCardsMatch(), !deck.hasAvailableCardsToDraw() {
+            let lastThreeCards = board.filter { $0 != nil }
             if lastThreeCards.count == 3 {
                 score += 5
                 return true
             }
         }
-        let tmpSelectedCards = currentSelected
-        currentSelected.removeAll()
-        for card1 in currentCardsOnScreen.indices {
-            for card2 in currentCardsOnScreen.indices where card2 != card1 {
-                for card3 in currentCardsOnScreen.indices where card3 != card2 && card3 != card1 {
-                    if currentCardsOnScreen[card1] != nil, currentCardsOnScreen[card2] != nil, currentCardsOnScreen[card3] != nil {
-                        currentSelected = [card1, card2, card3]
+        let tmpSelectedCards = currentSelectedCards
+        currentSelectedCards.removeAll()
+        for card1 in board.indices {
+            for card2 in board.indices where card2 != card1 {
+                for card3 in board.indices where card3 != card2 && card3 != card1 {
+                    if board[card1] != nil, board[card2] != nil, board[card3] != nil {
+                        currentSelectedCards = [card1, card2, card3]
                     }
-                    if isMatch() {
-                        currentSelected = tmpSelectedCards
+                    if selectedCardsMatch() {
+                        currentSelectedCards = tmpSelectedCards
                         return false
                     }
                 }
             }
         }
-        currentSelected = tmpSelectedCards
+        currentSelectedCards = tmpSelectedCards
         return true
     }
-    func isMatch() -> Bool {
+    func selectedCardsMatch() -> Bool {
         var matcher: [[Int]] = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
-        for index in currentSelected {
-            if let card = currentCardsOnScreen[index] {
+        for index in currentSelectedCards {
+            if let card = board[index] {
                 matcher[0][card.shape.rawValue] += 1
                 matcher[1][card.quantity.rawValue] += 1
                 matcher[2][card.color.rawValue] += 1
@@ -136,19 +131,16 @@ final class SetDemo {
         return true
     }
     private func checkForMatch() {
-        if currentSelected.count == 3 {
-            if isMatch() {
+        if currentSelectedCards.count == 3 {
+            if selectedCardsMatch() {
                 score += 5
-                for cardIndex in currentSelected {
-                    currentCardsOnScreen[cardIndex] = nil
+                for cardIndex in currentSelectedCards {
+                    board[cardIndex] = nil
                 }
             } else {
                 score -= 3
-                for cardIndex in currentSelected.indices {
-                    currentCardsOnScreen[currentSelected[cardIndex]]?.isSelected = false
                 }
-            }
-            currentSelected.removeAll()
+            currentSelectedCards.removeAll()
         }
     }
 }

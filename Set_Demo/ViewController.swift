@@ -18,6 +18,9 @@ final class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if UIDevice.current.orientation.isLandscape {
+            boardView.transform = CGAffineTransform(rotationAngle: .pi / 2)
+        }
         let rotationGesture = UIRotationGestureRecognizer(target: self, action: #selector(shuffle(sender:)))
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(deal3More(sender:)))
         swipeDown.direction = .down
@@ -30,7 +33,7 @@ final class ViewController: UIViewController {
     private func loadFirstBoard() -> [PlayingCardView] {
         game = SetDemo()
         scoreLabel.text = "Score: \(game.score)"
-        grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.frame)
+        grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.bounds)
         grid.cellCount = 12
         for indexOfCardOnScreen in 0..<12 {
             let cardView = PlayingCardView(card: (game.board[indexOfCardOnScreen])!)
@@ -50,7 +53,7 @@ final class ViewController: UIViewController {
             playingCardView.frame = grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
             indexOfCard += 1
             playingCardView.backgroundColor = UIColor.clear
-            view.addSubview(playingCardView)
+            boardView.addSubview(playingCardView)
         }
     }
     
@@ -176,22 +179,29 @@ final class ViewController: UIViewController {
 
 //    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 //        let lastCellCount = grid.cellCount
+//        boardView.bounds = CGRect(x: boardView.bounds.maxY, y: boardView.bounds.minX, width: boardView.bounds.width, height: boardView.bounds.height)
+//        boardView.frame = CGRect(x: boardView.frame.maxY, y: boardView.frame.minX, width: boardView.frame.width, height: boardView.frame.height)
+//        boardView.transform = CGAffineTransform(rotationAngle: .pi / 2)
+//        grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.frame)
+//        grid.cellCount = lastCellCount
+//        for playingCardView in playingCardViews {
+//            playingCardView.removeFromSuperview()
+//        }
+//        updateView()
+//        boardView.layoutSubviews()
 //        if UIDevice.current.orientation.isLandscape {
-//            grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: CGRect(x: boardView.frame.maxX, y: boardView.frame.minY, width: boardView.frame.height, height: boardView.frame.width))
-//            grid.cellCount = lastCellCount
-//            for playingCardView in playingCardViews {
-//                playingCardView.removeFromSuperview()
-//            }
+//
+//
+//
 //            view.layoutSubviews()
 //            view.setNeedsDisplay()
-//            updateView()
 //        } else {
-//            grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.frame)
+//            grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.bounds)
 //            grid.cellCount = lastCellCount
 //            for playingCardView in playingCardViews {
 //                playingCardView.removeFromSuperview()
 //            }
 //            updateView()
-//            view.layoutSubviews()
+//
 //        }
 //    }

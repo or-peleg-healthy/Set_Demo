@@ -105,6 +105,13 @@ final class SetDemo {
         }
     }
     private func didGameEnd() -> Bool {
+        if isMatch(), lastCardAdded > 79 {
+            let lastThreeCards = currentCardsOnScreen.filter { $0 != nil }
+            if lastThreeCards.count == 3 {
+                score += 5
+                return true
+            }
+        }
         let tmpSelectedCards = currentSelected
         currentSelected.removeAll()
         for card1 in currentCardsOnScreen.indices {

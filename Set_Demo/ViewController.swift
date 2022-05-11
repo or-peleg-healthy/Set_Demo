@@ -96,7 +96,6 @@ final class ViewController: UIViewController {
         if let cardNumber = playingCardViews.firstIndex(of: sender) {
             selectedCardsToRemove.removeAll()
             let (isMatch, gameEnded) = game.cardWasSelected(at: cardNumber)
-            print(cardNumber)
             for index in game.currentSelected {
                 selectedCardsToRemove.append(index)
             }
@@ -186,12 +185,13 @@ final class ViewController: UIViewController {
     }
     private func showGameOverAlert() {
         let gameOverAlert = UIAlertController(title: "Game Over !! \n no more matches can be composed! \n you final score is \(game.score)", message: nil, preferredStyle: .alert)
-        gameOverAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-            for button in self.playingCardViews {
-                button.isHidden = true
-            }
-            self.deal3MoreButton.isEnabled = false
-            }
+        gameOverAlert.addAction(UIAlertAction(title: "New Game", style: .default, handler: { [self] _ in
+            newGame((Any).self)
+        }
+        ))
+        gameOverAlert.addAction(UIAlertAction(title: "Quit", style: .default, handler: { _ in
+            UIControl().sendAction(#selector(NSXPCConnection.suspend), to: UIApplication.shared, for: nil)
+        }
         ))
         self.present(gameOverAlert, animated: true)
     }

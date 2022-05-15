@@ -51,8 +51,6 @@ final class SetDemo {
     }
     
     func cardWasSelected(at index: Int) -> (Bool, Bool) {
-        currentMatchedCards.removeAll()
-        currentMissMatchedCards.removeAll()
         checkForMatch()
         board = board.filter({ $0 != nil })
         for _ in 0..<81 - board.count {
@@ -131,6 +129,8 @@ final class SetDemo {
         return true
     }
     private func checkForMatch() {
+        currentMatchedCards.removeAll()
+        currentMissMatchedCards.removeAll()
         if currentSelectedCards.count == 3 {
             if selectedCardsMatch() {
                 score += 5

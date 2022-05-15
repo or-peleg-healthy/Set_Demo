@@ -15,7 +15,9 @@ final class ViewController: UIViewController {
     private lazy var game = SetDemo()
     @IBOutlet private weak var scoreLabel: UILabel!
     @IBOutlet private weak var boardView: UIView!
-    
+    @IBOutlet private weak var matchedPile: UIView!
+    @IBOutlet private weak var deckPlaceHolder: UIView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         if UIDevice.current.orientation.isLandscape {
@@ -27,6 +29,8 @@ final class ViewController: UIViewController {
         self.view.addGestureRecognizer(rotationGesture)
         self.view.addGestureRecognizer(swipeDown)
         playingCardViews = loadFirstBoard()
+        let topDeckCard = PlayingCardView()
+        topDeckCard.frame = deckPlaceHolder.frame
         updateView()
     }
     
@@ -50,6 +54,9 @@ final class ViewController: UIViewController {
     func updateView() {
         var indexOfCard = 0
         for playingCardView in playingCardViews {
+            if playingCardView.alpha == 0 {
+                fadeIn(cardToFade: playingCardView)
+            }
             playingCardView.frame = grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
             indexOfCard += 1
             playingCardView.backgroundColor = UIColor.clear
@@ -147,6 +154,7 @@ final class ViewController: UIViewController {
             if game.currentSelectedCards.contains(indexOfCard) {
                 cardView.layer.borderColor = UIColor.green.cgColor
                 if game.currentMatchedCards.contains(indexOfCard) {
+                    fadeOut(cardToFade: cardView)
                     cardView.layer.borderWidth = 10.0
                 } else if game.currentMissMatchedCards.contains(indexOfCard) {
                     cardView.layer.borderColor = UIColor.red.cgColor
@@ -162,46 +170,16 @@ final class ViewController: UIViewController {
         let gameOverAlert = UIAlertController(title: "Game Over !! \n no more matches can be composed! \n you final score is \(game.score)", message: nil, preferredStyle: .alert)
         gameOverAlert.addAction(UIAlertAction(title: "New Game", style: .default, handler: { [self] _ in
             newGame((Any).self)
-        }
-        ))
+        }))
         gameOverAlert.addAction(UIAlertAction(title: "Quit", style: .default, handler: { _ in
             UIControl().sendAction(#selector(NSXPCConnection.suspend), to: UIApplication.shared, for: nil)
-        }
-        ))
+        }))
         self.present(gameOverAlert, animated: true)
     }
+    
     private func noMoreCardsToDealAlert() {
         let noMoreCardsAlert = UIAlertController(title: "The Deck is Empty", message: nil, preferredStyle: .alert)
         noMoreCardsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in }))
         self.present(noMoreCardsAlert, animated: true)
     }
 }
-
-//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        let lastCellCount = grid.cellCount
-//        boardView.bounds = CGRect(x: boardView.bounds.maxY, y: boardView.bounds.minX, width: boardView.bounds.width, height: boardView.bounds.height)
-//        boardView.frame = CGRect(x: boardView.frame.maxY, y: boardView.frame.minX, width: boardView.frame.width, height: boardView.frame.height)
-//        boardView.transform = CGAffineTransform(rotationAngle: .pi / 2)
-//        grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.frame)
-//        grid.cellCount = lastCellCount
-//        for playingCardView in playingCardViews {
-//            playingCardView.removeFromSuperview()
-//        }
-//        updateView()
-//        boardView.layoutSubviews()
-//        if UIDevice.current.orientation.isLandscape {
-//
-//
-//
-//            view.layoutSubviews()
-//            view.setNeedsDisplay()
-//        } else {
-//            grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.bounds)
-//            grid.cellCount = lastCellCount
-//            for playingCardView in playingCardViews {
-//                playingCardView.removeFromSuperview()
-//            }
-//            updateView()
-//
-//        }
-//    }

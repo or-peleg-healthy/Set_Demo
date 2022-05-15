@@ -8,10 +8,14 @@
 import UIKit
 @IBDesignable final class PlayingCardView: UIControl {
     var card: Card
-    
+    var faceUp: Bool
+    private let backOfCardImage = UIImage(named: "Back Of Card")
+
     required init(card: Card) {
         self.card = card
+        faceUp = true
         super.init(frame: .zero)
+        self.alpha = 0
     }
     
     required init?(coder: NSCoder) {
@@ -19,37 +23,51 @@ import UIKit
         // fatalError("init(coder:) has not been implemented")
     }
     
+    required init() {
+        card = Card(shape: .diamond, quantity: .one, color: .orange, shading: .open)
+        faceUp = false
+        super.init(frame: .zero)
+        self.alpha = 1
+    }
+    
     override func draw(_ rect: CGRect) {
-        let context = UIGraphicsGetCurrentContext()
-        let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: 10.0)
-        roundedRect.addClip()
-        UIColor.white.setFill()
-        roundedRect.fill()
-        let grid = Grid(layout: .dimensions(rowCount: card.quantity.rawValue + 1, columnCount: 1), frame: roundedRect.bounds.insetBy(dx: 4, dy: 4))
-        let color = decodeColors[card.color.rawValue]
-        for indexToAdd in 0...card.quantity.rawValue {
-            var drawingOnCard = UIBezierPath()
-            switch card.shape {
-            case .squiggle:
-                drawingOnCard = createSquiggle(grid[indexToAdd]!.insetBy(dx: 3, dy: 3))
-            case .diamond:
-                drawingOnCard = createDiamond(grid[indexToAdd]!.insetBy(dx: 3, dy: 3))
-            case .oval:
-                drawingOnCard = createOval(grid[indexToAdd]!.insetBy(dx: 3, dy: 3))
+        if faceUp {
+            let context = UIGraphicsGetCurrentContext()
+            let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: 10.0)
+            roundedRect.addClip()
+            UIColor.white.setFill()
+            roundedRect.fill()
+            let grid = Grid(layout: .dimensions(rowCount: card.quantity.rawValue + 1, columnCount: 1), frame: roundedRect.bounds.insetBy(dx: 4, dy: 4))
+            let color = decodeColors[card.color.rawValue]
+            for indexToAdd in 0...card.quantity.rawValue {
+                var drawingOnCard = UIBezierPath()
+                switch card.shape {
+                case .squiggle:
+                    drawingOnCard = createSquiggle(grid[indexToAdd]!.insetBy(dx: 3, dy: 3))
+                case .diamond:
+                    drawingOnCard = createDiamond(grid[indexToAdd]!.insetBy(dx: 3, dy: 3))
+                case .oval:
+                    drawingOnCard = createOval(grid[indexToAdd]!.insetBy(dx: 3, dy: 3))
+                }
+                switch card.shading {
+                case .open:
+                    color?.setStroke()
+                    drawingOnCard.stroke()
+                case .solid:
+                    color?.setFill()
+                    drawingOnCard.fill()
+                case .striped:
+                    context?.saveGState()
+                    addStripes(shape: drawingOnCard, color: color!)
+                    context?.restoreGState()
+                }
+                drawingOnCard.lineWidth = 3.0
             }
-            switch card.shading {
-            case .open:
-                color?.setStroke()
-                drawingOnCard.stroke()
-            case .solid:
-                color?.setFill()
-                drawingOnCard.fill()
-            case .striped:
-                context?.saveGState()
-                addStripes(shape: drawingOnCard, color: color!)
-                context?.restoreGState()
-            }
-            drawingOnCard.lineWidth = 3.0
+        } else {
+            let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: 10.0)
+            roundedRect.addClip()
+            backOfCardImage?.draw(in: roundedRect.bounds)
+            roundedRect.stroke()
         }
     }
     

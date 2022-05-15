@@ -17,58 +17,83 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="Fc7-de-aJD">
-                                <rect key="frame" x="160" y="789" width="94.5" height="72.5"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KIw-7M-IgS">
+                                <rect key="frame" x="20" y="44" width="374" height="682"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="bottom" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="HIx-KS-D13">
+                                <rect key="frame" x="41.5" y="734" width="331" height="128"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bMI-PC-ccH">
-                                        <rect key="frame" x="26.5" y="0.0" width="41.5" height="20.5"/>
-                                        <color key="backgroundColor" red="0.0" green="0.78039215689999997" blue="0.74509803919999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" systemColor="tintColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <stackView opaque="NO" contentMode="scaleAspectFill" axis="vertical" distribution="fillEqually" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="0KZ-Kn-wjR">
-                                        <rect key="frame" x="0.0" y="41.5" width="94.5" height="31"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="9Tc-rA-Lgu">
+                                        <rect key="frame" x="0.0" y="0.0" width="105" height="128"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="CxK-ca-EsJ">
-                                                <rect key="frame" x="0.0" y="0.0" width="94.5" height="31"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jvw-VT-iSB">
+                                                <rect key="frame" x="0.0" y="0.0" width="105" height="128"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="Fc7-de-aJD">
+                                        <rect key="frame" x="113" y="55.5" width="105" height="72.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bMI-PC-ccH">
+                                                <rect key="frame" x="32" y="0.0" width="41.5" height="20.5"/>
+                                                <color key="backgroundColor" red="0.0" green="0.78039215689999997" blue="0.74509803919999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" systemColor="tintColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <stackView opaque="NO" contentMode="scaleAspectFill" axis="vertical" distribution="fillEqually" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="0KZ-Kn-wjR">
+                                                <rect key="frame" x="5.5" y="41.5" width="94.5" height="31"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kE9-nq-XAY">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="CxK-ca-EsJ">
                                                         <rect key="frame" x="0.0" y="0.0" width="94.5" height="31"/>
-                                                        <color key="backgroundColor" systemColor="systemMintColor"/>
-                                                        <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <state key="normal" title="Button"/>
-                                                        <buttonConfiguration key="configuration" style="plain" title="New Game"/>
-                                                        <connections>
-                                                            <action selector="newGame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="q59-QJ-5ME"/>
-                                                        </connections>
-                                                    </button>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kE9-nq-XAY">
+                                                                <rect key="frame" x="0.0" y="0.0" width="94.5" height="31"/>
+                                                                <color key="backgroundColor" systemColor="systemMintColor"/>
+                                                                <color key="tintColor" red="0.093747459352016449" green="0.13364627957344055" blue="0.94880062341690063" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <state key="normal" title="Button"/>
+                                                                <buttonConfiguration key="configuration" style="plain" title="New Game"/>
+                                                                <connections>
+                                                                    <action selector="newGame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="q59-QJ-5ME"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                    </stackView>
                                                 </subviews>
                                             </stackView>
                                         </subviews>
                                     </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="zZo-Lq-dcF">
+                                        <rect key="frame" x="226" y="0.0" width="105" height="128"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3VK-Ms-WbI">
+                                                <rect key="frame" x="0.0" y="0.0" width="105" height="128"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                             </stackView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KIw-7M-IgS">
-                                <rect key="frame" x="20" y="44" width="374" height="737"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGrayColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Fc7-de-aJD" secondAttribute="bottom" constant="0.5" id="9pS-9P-TIw"/>
+                            <constraint firstItem="HIx-KS-D13" firstAttribute="top" secondItem="KIw-7M-IgS" secondAttribute="bottom" constant="8" symbolic="YES" id="1T8-N9-7H5"/>
+                            <constraint firstItem="HIx-KS-D13" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="4IT-F7-hgs"/>
                             <constraint firstItem="KIw-7M-IgS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="FNJ-dq-iLE"/>
                             <constraint firstItem="KIw-7M-IgS" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="cDC-A1-xoX"/>
-                            <constraint firstItem="Fc7-de-aJD" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="kt2-Y6-ATH"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="HIx-KS-D13" secondAttribute="bottom" id="tkb-mq-yEE"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="KIw-7M-IgS" secondAttribute="trailing" constant="20" id="ugM-X6-1By"/>
-                            <constraint firstItem="Fc7-de-aJD" firstAttribute="top" secondItem="KIw-7M-IgS" secondAttribute="bottom" constant="8" symbolic="YES" id="xxf-gj-07o"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="boardView" destination="KIw-7M-IgS" id="R1W-Tx-yCA"/>
+                        <outlet property="deckPlaceHolder" destination="jvw-VT-iSB" id="TAf-Hm-rmk"/>
+                        <outlet property="matchedPile" destination="3VK-Ms-WbI" id="TmQ-xg-NbG"/>
                         <outlet property="scoreLabel" destination="bMI-PC-ccH" id="maB-XX-lOd"/>
                     </connections>
                 </viewController>

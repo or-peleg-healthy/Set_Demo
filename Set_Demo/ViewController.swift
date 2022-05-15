@@ -19,6 +19,7 @@ final class ViewController: UIViewController {
     @IBOutlet private weak var deckPlaceHolder: UIView!
     let topDeckCard = PlayingCardView()
     let topMatchedPileCard = PlayingCardView()
+    var finishedAnimating = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +40,7 @@ final class ViewController: UIViewController {
         topDeckCard.frame = deckPlaceHolder.frame
         deckPlaceHolder.addSubview(topDeckCard)
         deckPlaceHolder.setNeedsLayout()
+        topDeckCard.alpha = 1
         topMatchedPileCard.frame = matchedPile.frame
         topMatchedPileCard.alpha = 0
         matchedPile.addSubview(topMatchedPileCard)
@@ -60,14 +62,42 @@ final class ViewController: UIViewController {
     
     func updateView() {
         var indexOfCard = 0
-        for playingCardView in playingCardViews {
+        for playingCardView in self.playingCardViews {
             if playingCardView.alpha == 0 {
+                self.deckPlaceHolder.addSubview(playingCardView)
+                playingCardView.frame = self.deckPlaceHolder.frame
+                self.deckPlaceHolder.setNeedsLayout()
+                finishedAnimating = false
                 fadeIn(cardToFade: playingCardView)
+                UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1,
+                                                               delay: 0,
+                                                               animations: {
+                    playingCardView.backgroundColor = UIColor.clear
+                }, completion: { _ in UIView.transition(with: playingCardView,
+                                                        duration: 1,
+                                                        options: [.curveLinear],
+                                                        animations: {
+                    playingCardView.frame = self.grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
+                    self.boardView.addSubview(playingCardView)
+                    indexOfCard += 1 },
+                                                 completion: {_ in
+                    UIView.transition(with: playingCardView,
+                                      duration: 0.7,
+                                      options: [.transitionFlipFromLeft],
+                                      animations: { playingCardView.faceUp = true
+                    playingCardView.setNeedsDisplay()
+                    self.finishedAnimating = true
+                    })})})
+            } else {
+                UIView.transition(with: playingCardView,
+                                  duration: 1,
+                                  options: [.curveEaseIn],
+                                  animations: {
+                    playingCardView.frame = self.grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
+                    indexOfCard += 1
+                    self.boardView.addSubview(playingCardView)},
+                                  completion: { _ in })
             }
-            playingCardView.frame = grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
-            indexOfCard += 1
-            playingCardView.backgroundColor = UIColor.clear
-            boardView.addSubview(playingCardView)
         }
     }
     
@@ -115,14 +145,13 @@ final class ViewController: UIViewController {
     }
     
     @objc func deal3More(sender: UIView) {
+        if !finishedAnimating {
+            return
+        }
         let newCards = game.deal3More()
         if newCards.isEmpty {
             noMoreCardsToDealAlert()
         } else {
-            if game.deck.cards.isEmpty {
-                fadeOut(cardToFade: topDeckCard)
-                return
-            }
             for indexOfCardOnScreen in newCards {
                 fadeOut(cardToFade: topDeckCard)
                 fadeIn(cardToFade: topDeckCard)
@@ -134,6 +163,9 @@ final class ViewController: UIViewController {
                 let swipeDown = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
                 cardView.addGestureRecognizer(swipeDown)
                 playingCardViews.append(cardView)
+                if game.deck.cards.isEmpty {
+                    fadeOut(cardToFade: topDeckCard)
+                }
             }
             updateView()
         }

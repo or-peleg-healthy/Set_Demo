@@ -13,7 +13,7 @@ import UIKit
 
     required init(card: Card) {
         self.card = card
-        faceUp = true
+        faceUp = false
         super.init(frame: .zero)
         self.alpha = 0
     }

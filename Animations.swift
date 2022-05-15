@@ -20,3 +20,10 @@ func fadeIn(cardToFade: UIView) {
                       options: [],
                       animations: { cardToFade.alpha = 1 })
 }
+
+func connect2Animators(firstAnimator: UIViewPropertyAnimator, secondAnimator: UIViewPropertyAnimator) -> UIViewPropertyAnimator {
+    firstAnimator.addCompletion { _ in
+            secondAnimator.startAnimation()
+        }
+    return secondAnimator
+}

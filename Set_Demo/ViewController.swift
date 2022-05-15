@@ -61,43 +61,43 @@ final class ViewController: UIViewController {
     }
     
     func updateView() {
-        var indexOfCard = 0
-        for playingCardView in self.playingCardViews {
-            if playingCardView.alpha == 0 {
-                self.deckPlaceHolder.addSubview(playingCardView)
-                playingCardView.frame = self.deckPlaceHolder.frame
-                self.deckPlaceHolder.setNeedsLayout()
-                finishedAnimating = false
-                fadeIn(cardToFade: playingCardView)
-                UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1,
-                                                               delay: 0,
-                                                               animations: {
-                    playingCardView.backgroundColor = UIColor.clear
-                }, completion: { _ in UIView.transition(with: playingCardView,
-                                                        duration: 1,
-                                                        options: [.curveLinear],
-                                                        animations: {
-                    playingCardView.frame = self.grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
-                    self.boardView.addSubview(playingCardView)
-                    indexOfCard += 1 },
-                                                 completion: {_ in
-                    UIView.transition(with: playingCardView,
-                                      duration: 0.7,
-                                      options: [.transitionFlipFromLeft],
-                                      animations: { playingCardView.faceUp = true
-                    playingCardView.setNeedsDisplay()
-                    self.finishedAnimating = true
-                    })})})
-            } else {
+        callNextAnimator(indexOfCard: 0)
+    }
+    
+    func callNextAnimator(indexOfCard: Int) {
+        let playingCardView = self.playingCardViews[indexOfCard]
+        playingCardView.backgroundColor = UIColor.clear
+        finishedAnimating = false
+        if playingCardView.alpha == 0 {
+            playingCardView.frame = CGRect(origin: CGPoint(x: 50, y: 700), size: CGSize(width: 100, height: 100))
+            fadeIn(cardToFade: playingCardView)
+            fadeOut(cardToFade: deckPlaceHolder, alpha: 0.2)
+            fadeIn(cardToFade: deckPlaceHolder)
+            UIView.transition(with: playingCardView,
+                              duration: 0.3,
+                              options: [.curveEaseIn],
+                              animations: {
+                playingCardView.frame = self.grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
+                self.boardView.addSubview(playingCardView)},
+                                             completion: {_ in
                 UIView.transition(with: playingCardView,
-                                  duration: 1,
-                                  options: [.curveEaseIn],
+                                  duration: 0.3,
+                                  options: [.transitionFlipFromLeft],
                                   animations: {
-                    playingCardView.frame = self.grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
-                    indexOfCard += 1
-                    self.boardView.addSubview(playingCardView)},
-                                  completion: { _ in })
-            }
+                playingCardView.faceUp = true
+                playingCardView.setNeedsDisplay()
+                self.finishedAnimating = true
+                }, completion: { _ in if indexOfCard + 1 < self.playingCardViews.count {
+                    self.callNextAnimator(indexOfCard: indexOfCard + 1) }})})
+        } else {
+            UIView.transition(with: playingCardView,
+                              duration: 0.10,
+                              options: [.curveEaseIn],
+                              animations: {
+                playingCardView.frame = self.grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
+                self.boardView.addSubview(playingCardView)},
+                              completion: { _ in if indexOfCard + 1 < self.playingCardViews.count {
+                self.callNextAnimator(indexOfCard: indexOfCard + 1) }})
         }
     }
     
@@ -153,8 +153,6 @@ final class ViewController: UIViewController {
             noMoreCardsToDealAlert()
         } else {
             for indexOfCardOnScreen in newCards {
-                fadeOut(cardToFade: topDeckCard)
-                fadeIn(cardToFade: topDeckCard)
                 grid.cellCount += 1
                 let cardView = PlayingCardView(card: (game.board[indexOfCardOnScreen])!)
                 cardView.layer.borderWidth = 1.5
@@ -164,7 +162,7 @@ final class ViewController: UIViewController {
                 cardView.addGestureRecognizer(swipeDown)
                 playingCardViews.append(cardView)
                 if game.deck.cards.isEmpty {
-                    fadeOut(cardToFade: topDeckCard)
+                    fadeOut(cardToFade: topDeckCard, alpha: 0)
                 }
             }
             updateView()
@@ -199,8 +197,8 @@ final class ViewController: UIViewController {
             if game.currentSelectedCards.contains(indexOfCard) {
                 cardView.layer.borderColor = UIColor.green.cgColor
                 if game.currentMatchedCards.contains(indexOfCard) {
-                    fadeOut(cardToFade: cardView)
-                    fadeOut(cardToFade: topMatchedPileCard)
+                    fadeOut(cardToFade: cardView, alpha: 0)
+                    fadeOut(cardToFade: topMatchedPileCard, alpha: 0)
                     fadeIn(cardToFade: topMatchedPileCard)
                     cardView.layer.borderWidth = 10.0
                 } else if game.currentMissMatchedCards.contains(indexOfCard) {

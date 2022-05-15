@@ -7,11 +7,11 @@
 
 import UIKit
 
-func fadeOut(cardToFade: UIView) {
+func fadeOut(cardToFade: UIView, alpha: Double) {
     UIView.transition(with: cardToFade,
                       duration: 0.75,
                       options: [],
-                      animations: { cardToFade.alpha = 0 })
+                      animations: { cardToFade.alpha = alpha })
 }
 
 func fadeIn(cardToFade: UIView) {

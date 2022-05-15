@@ -61,13 +61,29 @@ final class ViewController: UIViewController {
     }
     
     func updateView() {
-        callNextAnimator(indexOfCard: 0)
+        var index = 0
+        let playingCardView = self.playingCardViews[index]
+        playingCardView.backgroundColor = UIColor.clear
+        finishedAnimating = false
+        for playingCardIndex in index..<playingCardViews.count where playingCardViews[playingCardIndex].alpha == 1 {
+            let playingCardView = self.playingCardViews[playingCardIndex]
+            UIView.transition(with: playingCardView,
+                              duration: 0.10,
+                              options: [.curveEaseIn],
+                              animations: {
+                playingCardView.frame = self.grid[playingCardIndex]!.insetBy(dx: 2, dy: 2)
+                self.boardView.addSubview(playingCardView)
+            }, completion: { _ in })
+            index += 1
+        }
+        if index < playingCardViews.count {
+            callNextAnimator(indexOfCard: index)
+        }
     }
     
     func callNextAnimator(indexOfCard: Int) {
-        let playingCardView = self.playingCardViews[indexOfCard]
+        let playingCardView = playingCardViews[indexOfCard]
         playingCardView.backgroundColor = UIColor.clear
-        finishedAnimating = false
         if playingCardView.alpha == 0 {
             playingCardView.frame = CGRect(origin: CGPoint(x: 50, y: 700), size: CGSize(width: 100, height: 100))
             fadeIn(cardToFade: playingCardView)
@@ -89,15 +105,6 @@ final class ViewController: UIViewController {
                 self.finishedAnimating = true
                 }, completion: { _ in if indexOfCard + 1 < self.playingCardViews.count {
                     self.callNextAnimator(indexOfCard: indexOfCard + 1) }})})
-        } else {
-            UIView.transition(with: playingCardView,
-                              duration: 0.10,
-                              options: [.curveEaseIn],
-                              animations: {
-                playingCardView.frame = self.grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
-                self.boardView.addSubview(playingCardView)},
-                              completion: { _ in if indexOfCard + 1 < self.playingCardViews.count {
-                self.callNextAnimator(indexOfCard: indexOfCard + 1) }})
         }
     }
     

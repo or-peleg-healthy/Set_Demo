@@ -29,13 +29,15 @@ final class ViewController: UIViewController {
         self.view.addGestureRecognizer(rotationGesture)
         self.view.addGestureRecognizer(swipeDown)
         playingCardViews = loadFirstBoard()
-        let topDeckCard = PlayingCardView()
-        topDeckCard.frame = deckPlaceHolder.frame
         updateView()
     }
     
     private func loadFirstBoard() -> [PlayingCardView] {
         game = SetDemo()
+        let topDeckCard = PlayingCardView()
+        topDeckCard.frame = deckPlaceHolder.frame
+        deckPlaceHolder.addSubview(topDeckCard)
+        deckPlaceHolder.setNeedsLayout()
         scoreLabel.text = "Score: \(game.score)"
         grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.bounds)
         grid.cellCount = 12

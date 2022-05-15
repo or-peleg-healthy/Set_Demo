@@ -18,24 +18,27 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KIw-7M-IgS">
-                                <rect key="frame" x="20" y="44" width="374" height="682"/>
+                                <rect key="frame" x="20" y="44" width="374" height="660"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="bottom" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="HIx-KS-D13">
-                                <rect key="frame" x="41.5" y="734" width="331" height="128"/>
+                                <rect key="frame" x="41.5" y="712" width="331" height="150"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="9Tc-rA-Lgu">
-                                        <rect key="frame" x="0.0" y="0.0" width="105" height="128"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="105" height="150"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jvw-VT-iSB">
-                                                <rect key="frame" x="0.0" y="0.0" width="105" height="128"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="105" height="150"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="jvw-VT-iSB" secondAttribute="height" multiplier="7:10" id="gxb-F5-vAX"/>
+                                                </constraints>
                                             </view>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="Fc7-de-aJD">
-                                        <rect key="frame" x="113" y="55.5" width="105" height="72.5"/>
+                                        <rect key="frame" x="113" y="77.5" width="105" height="72.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bMI-PC-ccH">
                                                 <rect key="frame" x="32" y="0.0" width="41.5" height="20.5"/>
@@ -68,11 +71,14 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="zZo-Lq-dcF">
-                                        <rect key="frame" x="226" y="0.0" width="105" height="128"/>
+                                        <rect key="frame" x="226" y="0.0" width="105" height="150"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3VK-Ms-WbI">
-                                                <rect key="frame" x="0.0" y="0.0" width="105" height="128"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="105" height="150"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="3VK-Ms-WbI" secondAttribute="height" multiplier="7:10" id="Wxx-p7-CeM"/>
+                                                </constraints>
                                             </view>
                                         </subviews>
                                     </stackView>

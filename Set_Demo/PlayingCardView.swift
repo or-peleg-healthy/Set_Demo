@@ -9,7 +9,7 @@ import UIKit
 @IBDesignable final class PlayingCardView: UIControl {
     var card: Card
     var faceUp: Bool
-    private let backOfCardImage = UIImage(named: "Back Of Card")
+    private let backOfCardImage = UIImage(named: "BackOfCard")
 
     required init(card: Card) {
         self.card = card

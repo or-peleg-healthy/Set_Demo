@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ViewController: UIViewController {
+final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
     var playingCardViews: [PlayingCardView] = []
     var grid = Grid(layout: .aspectRatio(CGFloat(0.7)))
     var justMatched = false
@@ -20,9 +20,17 @@ final class ViewController: UIViewController {
     let topDeckCard = PlayingCardView()
     let topMatchedPileCard = PlayingCardView()
     var finishedAnimating = false
+    lazy var animator = UIDynamicAnimator(referenceView: view)
+    lazy var cardBehavior = CardBehavior(in: animator)
+    var currentMatchedCards: [PlayingCardView] = []
+    var match = false
+    var cellCount = 12 { didSet {
+        grid.cellCount = cellCount
+    }}
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        animator.delegate = self
         if UIDevice.current.orientation.isLandscape {
             boardView.transform = CGAffineTransform(rotationAngle: .pi / 2)
         }
@@ -31,11 +39,25 @@ final class ViewController: UIViewController {
         swipeDown.direction = .down
         self.view.addGestureRecognizer(rotationGesture)
         self.view.addGestureRecognizer(swipeDown)
-        playingCardViews = loadFirstBoard()
+        loadFirstBoard()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         updateView()
     }
     
-    private func loadFirstBoard() -> [PlayingCardView] {
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.bounds)
+        grid.cellCount = cellCount
+        updateView()
+    }
+    
+    private func loadFirstBoard() {
         game = SetDemo()
         topDeckCard.frame = deckPlaceHolder.frame
         deckPlaceHolder.addSubview(topDeckCard)
@@ -47,9 +69,8 @@ final class ViewController: UIViewController {
         topDeckCard.backgroundColor = UIColor.clear
         matchedPile.addSubview(topMatchedPileCard)
         matchedPile.setNeedsLayout()
+        cellCount = 12
         scoreLabel.text = "Score: \(game.score)"
-        grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.bounds)
-        grid.cellCount = 12
         for indexOfCardOnScreen in 0..<12 {
             let cardView = PlayingCardView(card: (game.board[indexOfCardOnScreen])!)
             cardView.layer.borderWidth = 1.5
@@ -59,7 +80,6 @@ final class ViewController: UIViewController {
             cardView.addGestureRecognizer(swipeDown)
             playingCardViews.append(cardView)
         }
-        return playingCardViews
     }
     
     func updateView() {
@@ -94,14 +114,14 @@ final class ViewController: UIViewController {
             fadeOut(cardToFade: deckPlaceHolder, alpha: 0.2)
             fadeIn(cardToFade: deckPlaceHolder)
             UIView.transition(with: playingCardView,
-                              duration: 0.3,
+                              duration: 0.01,
                               options: [.curveEaseIn],
                               animations: {
                 playingCardView.frame = self.grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
                 self.boardView.addSubview(playingCardView)},
                                              completion: {_ in
                 UIView.transition(with: playingCardView,
-                                  duration: 0.3,
+                                  duration: 0.01,
                                   options: [.transitionFlipFromLeft],
                                   animations: {
                 playingCardView.faceUp = true
@@ -118,7 +138,7 @@ final class ViewController: UIViewController {
         }
         selectedCardsToRemove.removeAll()
         playingCardViews.removeAll()
-        playingCardViews = loadFirstBoard()
+        loadFirstBoard()
         updateView()
         updateViewFromModel()
     }
@@ -128,7 +148,7 @@ final class ViewController: UIViewController {
             justMatched = false
             var dec = 0
             for index in selectedCardsToRemove.sorted() {
-                grid.cellCount -= 1
+                cellCount -= 1
                 playingCardViews[index + dec].removeFromSuperview()
                 playingCardViews.remove(at: index + dec)
                 dec -= 1
@@ -164,7 +184,7 @@ final class ViewController: UIViewController {
             noMoreCardsToDealAlert()
         } else {
             for indexOfCardOnScreen in newCards {
-                grid.cellCount += 1
+                cellCount += 1
                 let cardView = PlayingCardView(card: (game.board[indexOfCardOnScreen])!)
                 cardView.layer.borderWidth = 1.5
                 cardView.layer.borderColor = UIColor.clear.cgColor
@@ -201,6 +221,34 @@ final class ViewController: UIViewController {
         updateViewFromModel()
     }
 
+    func dynamicAnimatorDidPause(_ animator: UIDynamicAnimator) {
+        if match {
+            for cardView in currentMatchedCards {
+                UIView.transition(with: cardView,
+                                  duration: 1,
+                                  options: [.curveEaseIn],
+                                  animations: {
+                    cardView.alpha = 1
+                    cardView.frame = CGRect(origin: CGPoint(x: 256, y: 692), size: CGSize(width: 100, height: 150))
+            fadeOut(cardToFade: self.topMatchedPileCard, alpha: 0)
+        },
+                                         completion: {_ in
+            UIView.transition(with: cardView,
+                              duration: 0.3,
+                              options: [.transitionFlipFromLeft],
+                              animations: {
+                self.cardBehavior.removeItem(cardView)
+                cardView.faceUp = false
+                cardView.setNeedsDisplay()
+                cardView.layer.borderColor = UIColor.clear.cgColor
+            }, completion: { _ in
+                fadeIn(cardToFade: self.topMatchedPileCard)
+                self.finishedAnimating = true
+                self.match = false
+                self.currentMatchedCards.removeAll()
+            })})}}
+    }
+    
     private func updateViewFromModel() {
         scoreLabel.text = "Score: \(game.score)"
         for indexOfCard in playingCardViews.indices {
@@ -208,24 +256,9 @@ final class ViewController: UIViewController {
             if game.currentSelectedCards.contains(indexOfCard) {
                 cardView.layer.borderColor = UIColor.green.cgColor
                 if game.currentMatchedCards.contains(indexOfCard) {
-                    UIView.transition(with: cardView,
-                                      duration: 1,
-                                      options: [.curveEaseIn],
-                                      animations: {
-                        cardView.frame = CGRect(origin: CGPoint(x: 256, y: 692), size: CGSize(width: 100, height: 150))},
-                                                     completion: {_ in
-                        UIView.transition(with: cardView,
-                                          duration: 0.3,
-                                          options: [.transitionFlipFromLeft],
-                                          animations: {
-                            cardView.faceUp = false
-                            cardView.setNeedsDisplay()
-                            cardView.layer.borderColor = UIColor.clear.cgColor
-                            fadeOut(cardToFade: self.topMatchedPileCard, alpha: 0)
-                        }, completion: { _ in
-                            fadeIn(cardToFade: self.topMatchedPileCard)
-                            self.finishedAnimating = true
-                        })})
+                    self.match = true
+                    currentMatchedCards.append(cardView)
+                    self.cardBehavior.addItem(cardView)
                 } else if game.currentMissMatchedCards.contains(indexOfCard) {
                     cardView.layer.borderColor = UIColor.red.cgColor
                 }

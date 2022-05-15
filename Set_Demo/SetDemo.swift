@@ -12,7 +12,7 @@ final class SetDemo {
     private(set) var currentMatchedCards: [Int] = []
     private(set) var currentMissMatchedCards: [Int] = []
     private(set) var board: [Card?] = []
-    private var deck = Deck()
+    private(set) var deck = Deck()
 
     init() {
         deck.shuffle()

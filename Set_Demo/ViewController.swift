@@ -17,6 +17,7 @@ final class ViewController: UIViewController {
     @IBOutlet private weak var boardView: UIView!
     @IBOutlet private weak var matchedPile: UIView!
     @IBOutlet private weak var deckPlaceHolder: UIView!
+    let topDeckCard = PlayingCardView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +35,6 @@ final class ViewController: UIViewController {
     
     private func loadFirstBoard() -> [PlayingCardView] {
         game = SetDemo()
-        let topDeckCard = PlayingCardView()
         topDeckCard.frame = deckPlaceHolder.frame
         deckPlaceHolder.addSubview(topDeckCard)
         deckPlaceHolder.setNeedsLayout()
@@ -114,7 +114,13 @@ final class ViewController: UIViewController {
         if newCards.isEmpty {
             noMoreCardsToDealAlert()
         } else {
+            if game.deck.cards.isEmpty {
+                fadeOut(cardToFade: topDeckCard)
+                return
+            }
             for indexOfCardOnScreen in newCards {
+                fadeOut(cardToFade: topDeckCard)
+                fadeIn(cardToFade: topDeckCard)
                 grid.cellCount += 1
                 let cardView = PlayingCardView(card: (game.board[indexOfCardOnScreen])!)
                 cardView.layer.borderWidth = 1.5

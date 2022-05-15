@@ -43,6 +43,8 @@ final class ViewController: UIViewController {
         topDeckCard.alpha = 1
         topMatchedPileCard.frame = matchedPile.frame
         topMatchedPileCard.alpha = 0
+        topMatchedPileCard.backgroundColor = UIColor.clear
+        topDeckCard.backgroundColor = UIColor.clear
         matchedPile.addSubview(topMatchedPileCard)
         matchedPile.setNeedsLayout()
         scoreLabel.text = "Score: \(game.score)"
@@ -78,6 +80,8 @@ final class ViewController: UIViewController {
         }
         if index < playingCardViews.count {
             callNextAnimator(indexOfCard: index)
+        } else {
+            self.finishedAnimating = true
         }
     }
     
@@ -204,10 +208,24 @@ final class ViewController: UIViewController {
             if game.currentSelectedCards.contains(indexOfCard) {
                 cardView.layer.borderColor = UIColor.green.cgColor
                 if game.currentMatchedCards.contains(indexOfCard) {
-                    fadeOut(cardToFade: cardView, alpha: 0)
-                    fadeOut(cardToFade: topMatchedPileCard, alpha: 0)
-                    fadeIn(cardToFade: topMatchedPileCard)
-                    cardView.layer.borderWidth = 10.0
+                    UIView.transition(with: cardView,
+                                      duration: 1,
+                                      options: [.curveEaseIn],
+                                      animations: {
+                        cardView.frame = CGRect(origin: CGPoint(x: 256, y: 692), size: CGSize(width: 100, height: 150))},
+                                                     completion: {_ in
+                        UIView.transition(with: cardView,
+                                          duration: 0.3,
+                                          options: [.transitionFlipFromLeft],
+                                          animations: {
+                            cardView.faceUp = false
+                            cardView.setNeedsDisplay()
+                            cardView.layer.borderColor = UIColor.clear.cgColor
+                            fadeOut(cardToFade: self.topMatchedPileCard, alpha: 0)
+                        }, completion: { _ in
+                            fadeIn(cardToFade: self.topMatchedPileCard)
+                            self.finishedAnimating = true
+                        })})
                 } else if game.currentMissMatchedCards.contains(indexOfCard) {
                     cardView.layer.borderColor = UIColor.red.cgColor
                 }

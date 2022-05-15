@@ -18,7 +18,8 @@ final class ViewController: UIViewController {
     @IBOutlet private weak var matchedPile: UIView!
     @IBOutlet private weak var deckPlaceHolder: UIView!
     let topDeckCard = PlayingCardView()
-
+    let topMatchedPileCard = PlayingCardView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if UIDevice.current.orientation.isLandscape {
@@ -38,6 +39,10 @@ final class ViewController: UIViewController {
         topDeckCard.frame = deckPlaceHolder.frame
         deckPlaceHolder.addSubview(topDeckCard)
         deckPlaceHolder.setNeedsLayout()
+        topMatchedPileCard.frame = matchedPile.frame
+        topMatchedPileCard.alpha = 0
+        matchedPile.addSubview(topMatchedPileCard)
+        matchedPile.setNeedsLayout()
         scoreLabel.text = "Score: \(game.score)"
         grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.bounds)
         grid.cellCount = 12
@@ -163,6 +168,8 @@ final class ViewController: UIViewController {
                 cardView.layer.borderColor = UIColor.green.cgColor
                 if game.currentMatchedCards.contains(indexOfCard) {
                     fadeOut(cardToFade: cardView)
+                    fadeOut(cardToFade: topMatchedPileCard)
+                    fadeIn(cardToFade: topMatchedPileCard)
                     cardView.layer.borderWidth = 10.0
                 } else if game.currentMissMatchedCards.contains(indexOfCard) {
                     cardView.layer.borderColor = UIColor.red.cgColor

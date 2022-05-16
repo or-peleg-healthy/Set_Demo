@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SetViewController.swift
 //  Set_Demo
 //
 //  Created by Or Peleg on 20/04/2022.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
+final class SetViewController: UIViewController, UIDynamicAnimatorDelegate {
     /* Outlets */
     @IBOutlet private weak var scoreLabel: UILabel!
     @IBOutlet private weak var boardView: UIView!
@@ -86,14 +86,13 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
         matchedPile.addSubview(topMatchedPileCard)
         matchedPile.setNeedsLayout()
     }
-    
     func updateView() {
         var index = 0
         finishedAnimating = false
         for playingCardIndex in index..<playingCardViews.count where playingCardViews[playingCardIndex].alpha == 1 {
             let playingCardView = self.playingCardViews[playingCardIndex]
             UIView.transition(with: playingCardView,
-                              duration: 0.10,
+                              duration: Constant.rearrangeBoardDuration,
                               options: [.curveEaseIn],
                               animations: {
                 playingCardView.frame = self.grid[playingCardIndex]!.insetBy(dx: 2, dy: 2)
@@ -166,6 +165,20 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
     }
     
     @objc func deal3More(sender: UIView) {
+        if justMatched {
+            justMatched = false
+            var dec = 0
+            for index in selectedCardsToRemove.sorted() {
+                cellCount -= 1
+                playingCardViews[index + dec].removeFromSuperview()
+                playingCardViews.remove(at: index + dec)
+                dec -= 1
+            }
+            for cardView in playingCardViews {
+                cardView.removeFromSuperview()
+            }
+            updateView()
+        }
         if !finishedAnimating {
             return
         }
@@ -234,7 +247,8 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
                 self.finishedAnimating = true
                 self.match = false
                 self.currentMatchedCards.removeAll()
-            })})}}
+            })})}
+        }
     }
     
     private func updateViewFromModel() {

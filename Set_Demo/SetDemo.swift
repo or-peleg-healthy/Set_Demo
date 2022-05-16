@@ -147,7 +147,7 @@ final class SetDemo {
 extension Int {
     var arc4random: Int {
         if self > 0 {
-            return Int.random(in: 0...self)
+            return Int.random(in: 0..<self)
         }
         return 0
     }

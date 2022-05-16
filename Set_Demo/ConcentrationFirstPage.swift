@@ -20,7 +20,6 @@ final class ConcentrationFirstPage: UIViewController {
         if let cvc = lastSegued {
             if let themeName = sender.titleLabel?.text {
                 let theme = Theme.make(themeName: themeName)
-                print(theme)
                 cvc.emojiChoices = theme
                 cvc.theme = theme
                 navigationController?.pushViewController(cvc, animated: true)
@@ -41,7 +40,6 @@ final class ConcentrationFirstPage: UIViewController {
                     if let cvc = segue.destination as? ConcentrationViewController {
                         cvc.emojiChoices = theme
                         cvc.theme = theme
-                        print(theme)
                         lastSegued = cvc
                 }
             }

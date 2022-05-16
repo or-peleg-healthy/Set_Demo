@@ -14,11 +14,11 @@
 		B0528F922830E73800C96072 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0528F912830E73800C96072 /* Assets.xcassets */; };
 		B0528F94283143A200C96072 /* CardBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528F93283143A200C96072 /* CardBehavior.swift */; };
 		B0528F9628325DA200C96072 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528F9528325DA200C96072 /* Constant.swift */; };
-		B0528F9B28328D5300C96072 /* ConcentrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528F9728328D5200C96072 /* ConcentrationViewController.swift */; };
 		B0528F9C28328D5300C96072 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528F9828328D5300C96072 /* Theme.swift */; };
-		B0528F9D28328D5300C96072 /* EmojiCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528F9928328D5300C96072 /* EmojiCard.swift */; };
 		B0528F9E28328D5300C96072 /* ConcentrationDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528F9A28328D5300C96072 /* ConcentrationDemo.swift */; };
 		B0528FA0283296A100C96072 /* ConcentrationFirstPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528F9F283296A100C96072 /* ConcentrationFirstPage.swift */; };
+		B0528FB82832B54400C96072 /* ConcentrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528FB72832B54400C96072 /* ConcentrationViewController.swift */; };
+		B0528FBA2832B61B00C96072 /* EmojiCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528FB92832B61B00C96072 /* EmojiCard.swift */; };
 		B092940C28103D9A0008D1DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B092940B28103D9A0008D1DD /* AppDelegate.swift */; };
 		B092940E28103D9A0008D1DD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B092940D28103D9A0008D1DD /* SceneDelegate.swift */; };
 		B092941028103D9A0008D1DD /* SetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B092940F28103D9A0008D1DD /* SetViewController.swift */; };
@@ -36,11 +36,11 @@
 		B0528F912830E73800C96072 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "../../Concentration_Demo/Concentration_Demo/Supporting Files/Assets.xcassets"; sourceTree = "<group>"; };
 		B0528F93283143A200C96072 /* CardBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBehavior.swift; sourceTree = "<group>"; };
 		B0528F9528325DA200C96072 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
-		B0528F9728328D5200C96072 /* ConcentrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConcentrationViewController.swift; path = ../../Concentration_Demo/Concentration_Demo/ConcentrationViewController.swift; sourceTree = "<group>"; };
 		B0528F9828328D5300C96072 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		B0528F9928328D5300C96072 /* EmojiCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EmojiCard.swift; path = ../../Concentration_Demo/Concentration_Demo/EmojiCard.swift; sourceTree = "<group>"; };
 		B0528F9A28328D5300C96072 /* ConcentrationDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcentrationDemo.swift; sourceTree = "<group>"; };
 		B0528F9F283296A100C96072 /* ConcentrationFirstPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcentrationFirstPage.swift; sourceTree = "<group>"; };
+		B0528FB72832B54400C96072 /* ConcentrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcentrationViewController.swift; sourceTree = "<group>"; };
+		B0528FB92832B61B00C96072 /* EmojiCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmojiCard.swift; sourceTree = "<group>"; };
 		B092940828103D9A0008D1DD /* Set_Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Set_Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B092940B28103D9A0008D1DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B092940D28103D9A0008D1DD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -84,15 +84,15 @@
 			children = (
 				B092941128103D9A0008D1DD /* Main.storyboard */,
 				B0528F9F283296A100C96072 /* ConcentrationFirstPage.swift */,
+				B0528FB72832B54400C96072 /* ConcentrationViewController.swift */,
 				B092940F28103D9A0008D1DD /* SetViewController.swift */,
-				B0528F9728328D5200C96072 /* ConcentrationViewController.swift */,
 				B0929420281577240008D1DD /* SetDemo.swift */,
 				B0528F9A28328D5300C96072 /* ConcentrationDemo.swift */,
 				B0528F9528325DA200C96072 /* Constant.swift */,
 				B0528F9828328D5300C96072 /* Theme.swift */,
-				B0528F9928328D5300C96072 /* EmojiCard.swift */,
 				B09294222815774A0008D1DD /* Card.swift */,
 				B02F6E4A282BAB96006D973D /* Deck.swift */,
+				B0528FB92832B61B00C96072 /* EmojiCard.swift */,
 				B0528F93283143A200C96072 /* CardBehavior.swift */,
 				B02F6DFD281FE2B0006D973D /* PlayingCardView.swift */,
 				B0528F8F2830E6CE00C96072 /* Animations.swift */,
@@ -212,11 +212,11 @@
 				B0528FA0283296A100C96072 /* ConcentrationFirstPage.swift in Sources */,
 				B092941028103D9A0008D1DD /* SetViewController.swift in Sources */,
 				B0528F9C28328D5300C96072 /* Theme.swift in Sources */,
+				B0528FB82832B54400C96072 /* ConcentrationViewController.swift in Sources */,
 				B0528F94283143A200C96072 /* CardBehavior.swift in Sources */,
+				B0528FBA2832B61B00C96072 /* EmojiCard.swift in Sources */,
 				B09294232815774A0008D1DD /* Card.swift in Sources */,
-				B0528F9B28328D5300C96072 /* ConcentrationViewController.swift in Sources */,
 				B02F6E4B282BAB96006D973D /* Deck.swift in Sources */,
-				B0528F9D28328D5300C96072 /* EmojiCard.swift in Sources */,
 				B0528F902830E6CE00C96072 /* Animations.swift in Sources */,
 				B092940C28103D9A0008D1DD /* AppDelegate.swift in Sources */,
 				B0528F9E28328D5300C96072 /* ConcentrationDemo.swift in Sources */,

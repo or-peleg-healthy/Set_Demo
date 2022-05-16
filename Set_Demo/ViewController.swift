@@ -113,7 +113,7 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
         if playingCardView.alpha == 0 {
             playingCardView.frame = self.deckPlaceHolder.convert(self.deckPlaceHolder.frame, to: self.view)
             fadeIn(cardToFade: playingCardView)
-            fadeOut(cardToFade: deckPlaceHolder, alpha: 0)
+            fadeOut(cardToFade: deckPlaceHolder, alpha: 0.3)
             fadeIn(cardToFade: deckPlaceHolder)
             UIView.transition(with: playingCardView,
                               duration: Constant.durationOfCardDealing,
@@ -176,11 +176,8 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
             for indexOfCardOnScreen in newCards {
                 cellCount += 1
                 let cardView = PlayingCardView(card: (game.board[indexOfCardOnScreen])!)
-                cardView.layer.borderWidth = 1.5
-                cardView.layer.borderColor = UIColor.clear.cgColor
-                cardView.layer.cornerRadius = 1
-                let swipeDown = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
-                cardView.addGestureRecognizer(swipeDown)
+                let tapOnCard = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+                cardView.addGestureRecognizer(tapOnCard)
                 playingCardViews.append(cardView)
                 if game.deck.cards.isEmpty {
                     fadeOut(cardToFade: topDeckCard, alpha: 0)
@@ -202,8 +199,8 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
         for cardOnScreen in game.board {
             if let card = cardOnScreen {
                 let cardView = PlayingCardView(card: card)
-                let swipeDown = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
-                cardView.addGestureRecognizer(swipeDown)
+                let tapOnCard = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+                cardView.addGestureRecognizer(tapOnCard)
                 playingCardViews.append(cardView)
             }
         }
@@ -216,7 +213,7 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
             for cardView in currentMatchedCards {
                 UIView.transition(with: cardView,
                                   duration: 1,
-                                  options: [.curveEaseIn],
+                                  options: [.curveLinear],
                                   animations: {
                     cardView.transform = (CGAffineTransform.identity)
                     cardView.frame = self.matchedPile.convert(self.matchedPile.frame, to: self.boardView)

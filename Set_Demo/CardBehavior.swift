@@ -12,7 +12,7 @@ final class CardBehavior: UIDynamicBehavior {
     let colBehavior = UICollisionBehavior()
     
     func addBehaviors() {
-        itemBehavior.allowsRotation = true
+        itemBehavior.allowsRotation = false
         itemBehavior.elasticity = 1.0
         itemBehavior.resistance = 1.0
         colBehavior.translatesReferenceBoundsIntoBoundary = true
@@ -26,8 +26,8 @@ final class CardBehavior: UIDynamicBehavior {
     
     private func push(_ item: UIDynamicItem) {
         let push = UIPushBehavior(items: [item], mode: .instantaneous)
-        push.angle = CGFloat(5.arc4random) * CGFloat.pi
-        push.magnitude = 10.0
+        push.angle = CGFloat.pi * item.center.y * item.center.x
+        push.magnitude = 5.0
         push.action = { [unowned push, weak self] in self?.removeChildBehavior(push) }
         addChildBehavior(push)
     }

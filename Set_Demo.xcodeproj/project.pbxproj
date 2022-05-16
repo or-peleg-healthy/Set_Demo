@@ -13,6 +13,7 @@
 		B0528F902830E6CE00C96072 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528F8F2830E6CE00C96072 /* Animations.swift */; };
 		B0528F922830E73800C96072 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0528F912830E73800C96072 /* Assets.xcassets */; };
 		B0528F94283143A200C96072 /* CardBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528F93283143A200C96072 /* CardBehavior.swift */; };
+		B0528F9628325DA200C96072 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0528F9528325DA200C96072 /* Constant.swift */; };
 		B092940C28103D9A0008D1DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B092940B28103D9A0008D1DD /* AppDelegate.swift */; };
 		B092940E28103D9A0008D1DD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B092940D28103D9A0008D1DD /* SceneDelegate.swift */; };
 		B092941028103D9A0008D1DD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B092940F28103D9A0008D1DD /* ViewController.swift */; };
@@ -29,6 +30,7 @@
 		B0528F8F2830E6CE00C96072 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Animations.swift; path = ../Animations.swift; sourceTree = "<group>"; };
 		B0528F912830E73800C96072 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "../../Concentration_Demo/Concentration_Demo/Supporting Files/Assets.xcassets"; sourceTree = "<group>"; };
 		B0528F93283143A200C96072 /* CardBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBehavior.swift; sourceTree = "<group>"; };
+		B0528F9528325DA200C96072 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		B092940828103D9A0008D1DD /* Set_Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Set_Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B092940B28103D9A0008D1DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B092940D28103D9A0008D1DD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				B092941F28103DDA0008D1DD /* Resources */,
 				B092940D28103D9A0008D1DD /* SceneDelegate.swift */,
 				B092940F28103D9A0008D1DD /* ViewController.swift */,
+				B0528F9528325DA200C96072 /* Constant.swift */,
 				B0528F93283143A200C96072 /* CardBehavior.swift */,
 				B0528F8F2830E6CE00C96072 /* Animations.swift */,
 				B0528F912830E73800C96072 /* Assets.xcassets */,
@@ -189,6 +192,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0929421281577240008D1DD /* SetDemo.swift in Sources */,
+				B0528F9628325DA200C96072 /* Constant.swift in Sources */,
 				B02F6DFE281FE2B0006D973D /* PlayingCardView.swift in Sources */,
 				B092941028103D9A0008D1DD /* ViewController.swift in Sources */,
 				B0528F94283143A200C96072 /* CardBehavior.swift in Sources */,

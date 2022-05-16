@@ -16,6 +16,10 @@ import UIKit
         faceUp = false
         super.init(frame: .zero)
         self.alpha = 0
+        self.layer.borderWidth = 1.5
+        self.layer.borderColor = UIColor.clear.cgColor
+        self.layer.cornerRadius = 1
+        self.backgroundColor = UIColor.clear
     }
     
     required init?(coder: NSCoder) {

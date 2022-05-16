@@ -8,44 +8,45 @@
 import UIKit
 
 final class CardBehavior: UIDynamicBehavior {
-    let behavior = UIDynamicItemBehavior()
+    let itemBehavior = UIDynamicItemBehavior()
     let colBehavior = UICollisionBehavior()
     
     func addBehaviors() {
-        behavior.allowsRotation = true
-        behavior.elasticity = 2.0
-        behavior.resistance = 1
+        itemBehavior.allowsRotation = true
+        itemBehavior.elasticity = 1.0
+        itemBehavior.resistance = 1.0
         colBehavior.translatesReferenceBoundsIntoBoundary = true
+        colBehavior.collisionMode = .everything
     }
     
     func removeBehaviors(cardView: PlayingCardView) {
-        behavior.removeItem(cardView)
+        itemBehavior.removeItem(cardView)
         colBehavior.removeItem(cardView)
     }
     
     private func push(_ item: UIDynamicItem) {
         let push = UIPushBehavior(items: [item], mode: .instantaneous)
-        push.angle = CGFloat(2.arc4random) * CGFloat.pi
-        push.magnitude = 1.0
+        push.angle = CGFloat(5.arc4random) * CGFloat.pi
+        push.magnitude = 10.0
         push.action = { [unowned push, weak self] in self?.removeChildBehavior(push) }
         addChildBehavior(push)
     }
     
     func addItem(_ item: UIDynamicItem) {
-        behavior.addItem(item)
+        itemBehavior.addItem(item)
         colBehavior.addItem(item)
         push(item)
     }
     
     func removeItem(_ item: UIDynamicItem) {
-        behavior.removeItem(item)
+        itemBehavior.removeItem(item)
         colBehavior.removeItem(item)
     }
     
     override init() {
         super.init()
         addBehaviors()
-        self.addChildBehavior(behavior)
+        self.addChildBehavior(itemBehavior)
         self.addChildBehavior(colBehavior)
     }
     

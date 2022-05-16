@@ -9,14 +9,14 @@ import UIKit
 
 func fadeOut(cardToFade: UIView, alpha: Double) {
     UIView.transition(with: cardToFade,
-                      duration: 0.75,
+                      duration: Constant.fadeOfAlphaDuration,
                       options: [],
                       animations: { cardToFade.alpha = alpha })
 }
 
 func fadeIn(cardToFade: UIView) {
     UIView.transition(with: cardToFade,
-                      duration: 0.75,
+                      duration: Constant.fadeOfAlphaDuration,
                       options: [],
                       animations: { cardToFade.alpha = 1 })
 }

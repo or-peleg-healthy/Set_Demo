@@ -8,57 +8,73 @@
 import UIKit
 
 final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
-    var playingCardViews: [PlayingCardView] = []
-    var grid = Grid(layout: .aspectRatio(CGFloat(0.7)))
-    var justMatched = false
-    var selectedCardsToRemove: [Int] = []
-    private lazy var game = SetDemo()
+    /* Outlets */
     @IBOutlet private weak var scoreLabel: UILabel!
     @IBOutlet private weak var boardView: UIView!
     @IBOutlet private weak var matchedPile: UIView!
     @IBOutlet private weak var deckPlaceHolder: UIView!
-    let topDeckCard = PlayingCardView()
-    let topMatchedPileCard = PlayingCardView()
-    var finishedAnimating = false
-    lazy var animator = UIDynamicAnimator(referenceView: view)
-    lazy var cardBehavior = CardBehavior(in: animator)
-    var currentMatchedCards: [PlayingCardView] = []
-    var match = false
-    var cellCount = 12 { didSet {
+    private let topDeckCard = PlayingCardView()
+    private let topMatchedPileCard = PlayingCardView()
+    
+    /* Model */
+    private lazy var game = SetDemo()
+    private var playingCardViews: [PlayingCardView] = []
+    private var grid = Grid(layout: .aspectRatio(CGFloat(0.7)))
+    
+    /* View Handlers */
+    private var justMatched = false
+    private var selectedCardsToRemove: [Int] = []
+    private var currentMatchedCards: [PlayingCardView] = []
+    private var match = false
+    private var cellCount = Constant.initialCellCount { didSet {
         grid.cellCount = cellCount
     }}
     
+    /* Animation Handlers */
+    var finishedAnimating = false
+    lazy var animator = UIDynamicAnimator(referenceView: view)
+    lazy var cardBehavior = CardBehavior(in: animator)
+   
+    /* Class Functions */
     override func viewDidLoad() {
         super.viewDidLoad()
         animator.delegate = self
-        if UIDevice.current.orientation.isLandscape {
-            boardView.transform = CGAffineTransform(rotationAngle: .pi / 2)
-        }
         let rotationGesture = UIRotationGestureRecognizer(target: self, action: #selector(shuffle(sender:)))
-        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(deal3More(sender:)))
-        swipeDown.direction = .down
+        let tapOnDeck = UITapGestureRecognizer(target: self, action: #selector(deal3More(sender:)))
         self.view.addGestureRecognizer(rotationGesture)
-        self.view.addGestureRecognizer(swipeDown)
+        self.deckPlaceHolder.addGestureRecognizer(tapOnDeck)
         loadFirstBoard()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        updateView()
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
     }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        grid = Grid(layout: .aspectRatio(CGFloat(0.7)), frame: boardView.bounds)
+        grid = Grid(layout: .aspectRatio(CGFloat(Constant.cardAspectRatio)), frame: boardView.bounds)
         grid.cellCount = cellCount
         updateView()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     private func loadFirstBoard() {
         game = SetDemo()
+        embedPlaceHolders()
+        cellCount = Constant.initialCellCount
+        scoreLabel.text = "Score: \(game.score)"
+        for indexOfCardOnScreen in 0..<12 {
+            let cardView = PlayingCardView(card: (game.board[indexOfCardOnScreen])!)
+            let tapOnCard = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+            cardView.addGestureRecognizer(tapOnCard)
+            playingCardViews.append(cardView)
+        }
+    }
+    
+    func embedPlaceHolders() {
         topDeckCard.frame = deckPlaceHolder.frame
         deckPlaceHolder.addSubview(topDeckCard)
         deckPlaceHolder.setNeedsLayout()
@@ -69,23 +85,10 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
         topDeckCard.backgroundColor = UIColor.clear
         matchedPile.addSubview(topMatchedPileCard)
         matchedPile.setNeedsLayout()
-        cellCount = 12
-        scoreLabel.text = "Score: \(game.score)"
-        for indexOfCardOnScreen in 0..<12 {
-            let cardView = PlayingCardView(card: (game.board[indexOfCardOnScreen])!)
-            cardView.layer.borderWidth = 1.5
-            cardView.layer.borderColor = UIColor.clear.cgColor
-            cardView.layer.cornerRadius = 1
-            let swipeDown = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
-            cardView.addGestureRecognizer(swipeDown)
-            playingCardViews.append(cardView)
-        }
     }
     
     func updateView() {
         var index = 0
-        let playingCardView = self.playingCardViews[index]
-        playingCardView.backgroundColor = UIColor.clear
         finishedAnimating = false
         for playingCardIndex in index..<playingCardViews.count where playingCardViews[playingCardIndex].alpha == 1 {
             let playingCardView = self.playingCardViews[playingCardIndex]
@@ -107,40 +110,27 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
     
     func callNextAnimator(indexOfCard: Int) {
         let playingCardView = playingCardViews[indexOfCard]
-        playingCardView.backgroundColor = UIColor.clear
         if playingCardView.alpha == 0 {
-            playingCardView.frame = CGRect(origin: CGPoint(x: 50, y: 700), size: CGSize(width: 100, height: 100))
+            playingCardView.frame = self.deckPlaceHolder.convert(self.deckPlaceHolder.frame, to: self.view)
             fadeIn(cardToFade: playingCardView)
-            fadeOut(cardToFade: deckPlaceHolder, alpha: 0.2)
+            fadeOut(cardToFade: deckPlaceHolder, alpha: 0)
             fadeIn(cardToFade: deckPlaceHolder)
             UIView.transition(with: playingCardView,
-                              duration: 0.01,
+                              duration: Constant.durationOfCardDealing,
                               options: [.curveEaseIn],
                               animations: {
-                playingCardView.frame = self.grid[indexOfCard]!.insetBy(dx: 2, dy: 2)
-                self.boardView.addSubview(playingCardView)},
-                                             completion: {_ in
+                    playingCardView.frame = self.grid[indexOfCard]!.insetBy(dx: Constant.spaceBetweenCardViews, dy: Constant.spaceBetweenCardViews)
+                    self.boardView.addSubview(playingCardView)},
+                             completion: {_ in
                 UIView.transition(with: playingCardView,
-                                  duration: 0.01,
+                                  duration: Constant.flipCardDuration,
                                   options: [.transitionFlipFromLeft],
                                   animations: {
-                playingCardView.faceUp = true
-                playingCardView.setNeedsDisplay()
-                self.finishedAnimating = true
-                }, completion: { _ in if indexOfCard + 1 < self.playingCardViews.count {
-                    self.callNextAnimator(indexOfCard: indexOfCard + 1) }})})
-        }
-    }
-    
-    @IBAction private func newGame(_ sender: Any) {
-        for playingCardView in playingCardViews {
-            playingCardView.removeFromSuperview()
-        }
-        selectedCardsToRemove.removeAll()
-        playingCardViews.removeAll()
-        loadFirstBoard()
-        updateView()
-        updateViewFromModel()
+                    playingCardView.faceUp = true
+                    playingCardView.setNeedsDisplay()
+                    self.finishedAnimating = true},
+                                  completion: { _ in if indexOfCard + 1 < self.playingCardViews.count {
+                                      self.callNextAnimator(indexOfCard: indexOfCard + 1) }})})}
     }
     
     @objc func handleTap(sender: UITapGestureRecognizer) {
@@ -220,7 +210,7 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
         updateView()
         updateViewFromModel()
     }
-
+    
     func dynamicAnimatorDidPause(_ animator: UIDynamicAnimator) {
         if match {
             for cardView in currentMatchedCards {
@@ -228,21 +218,22 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
                                   duration: 1,
                                   options: [.curveEaseIn],
                                   animations: {
-                    cardView.alpha = 1
-                    cardView.frame = CGRect(origin: CGPoint(x: 256, y: 692), size: CGSize(width: 100, height: 150))
-            fadeOut(cardToFade: self.topMatchedPileCard, alpha: 0)
+                    cardView.transform = (CGAffineTransform.identity)
+                    cardView.frame = self.matchedPile.convert(self.matchedPile.frame, to: self.boardView)
         },
                                          completion: {_ in
+                    self.cardBehavior.removeItem(cardView)
             UIView.transition(with: cardView,
                               duration: 0.3,
                               options: [.transitionFlipFromLeft],
                               animations: {
-                self.cardBehavior.removeItem(cardView)
                 cardView.faceUp = false
                 cardView.setNeedsDisplay()
                 cardView.layer.borderColor = UIColor.clear.cgColor
             }, completion: { _ in
-                fadeIn(cardToFade: self.topMatchedPileCard)
+                if self.topMatchedPileCard.alpha == 0 {
+                    fadeIn(cardToFade: self.topMatchedPileCard)
+                }
                 self.finishedAnimating = true
                 self.match = false
                 self.currentMatchedCards.removeAll()
@@ -267,6 +258,17 @@ final class ViewController: UIViewController, UIDynamicAnimatorDelegate {
                 cardView.layer.borderColor = UIColor.clear.cgColor
             }
         }
+    }
+    
+    @IBAction private func newGame(_ sender: Any) {
+        for playingCardView in playingCardViews {
+            playingCardView.removeFromSuperview()
+        }
+        selectedCardsToRemove.removeAll()
+        playingCardViews.removeAll()
+        loadFirstBoard()
+        updateView()
+        updateViewFromModel()
     }
     
     private func showGameOverAlert() {

@@ -172,7 +172,9 @@ final class SetViewController: UIViewController, UIDynamicAnimatorDelegate {
     }
     
     @objc func deal3More(sender: UIView) {
+        var presentNoMoreCardsAlert = true
         if justMatched {
+            presentNoMoreCardsAlert = false
             justMatched = false
             var dec = 0
             for index in selectedCardsToRemove.sorted() {
@@ -191,7 +193,7 @@ final class SetViewController: UIViewController, UIDynamicAnimatorDelegate {
             return
         }
         let newCards = game.deal3More()
-        if newCards.isEmpty, !justMatched {
+        if newCards.isEmpty, presentNoMoreCardsAlert {
             deckPlaceHolder.isHidden = true
             noMoreCardsToDealAlert()
         } else {
@@ -284,6 +286,7 @@ final class SetViewController: UIViewController, UIDynamicAnimatorDelegate {
         selectedCardsToRemove.removeAll()
         playingCardViews.removeAll()
         loadFirstBoard()
+        deckPlaceHolder.isHidden = false
         updateView()
         updateViewFromModel()
     }

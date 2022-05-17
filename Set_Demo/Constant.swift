@@ -14,5 +14,5 @@ enum Constant {
     static let spaceBetweenCardViews = CGFloat(2)
     static let flipCardDuration = CGFloat(0.2)
     static let fadeOfAlphaDuration = CGFloat(0.4)
-    static let rearrangeBoardDuration = 0.5
+    static let rearrangeBoardDuration = 0.2
 }

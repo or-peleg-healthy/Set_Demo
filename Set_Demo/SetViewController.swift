@@ -86,9 +86,16 @@ final class SetViewController: UIViewController, UIDynamicAnimatorDelegate {
         matchedPile.addSubview(topMatchedPileCard)
         matchedPile.setNeedsLayout()
     }
+    
     func updateView() {
         var index = 0
         finishedAnimating = false
+        if justMatched {
+            playingCardViews.removeAll()
+            for card in game.board {
+                playingCardViews.append(PlayingCardView(card: card!))
+            }
+        }
         for playingCardIndex in index..<playingCardViews.count where playingCardViews[playingCardIndex].alpha == 1 {
             let playingCardView = self.playingCardViews[playingCardIndex]
             UIView.transition(with: playingCardView,
@@ -177,6 +184,7 @@ final class SetViewController: UIViewController, UIDynamicAnimatorDelegate {
             for cardView in playingCardViews {
                 cardView.removeFromSuperview()
             }
+            selectedCardsToRemove.removeAll()
             updateView()
         }
         if !finishedAnimating {
@@ -223,31 +231,28 @@ final class SetViewController: UIViewController, UIDynamicAnimatorDelegate {
     
     func dynamicAnimatorDidPause(_ animator: UIDynamicAnimator) {
         if match {
-            for cardView in currentMatchedCards {
-                UIView.transition(with: cardView,
-                                  duration: 1,
-                                  options: [.curveLinear],
-                                  animations: {
-                    cardView.transform = (CGAffineTransform.identity)
-                    cardView.frame = self.matchedPile.convert(self.matchedPile.frame, to: self.boardView)
-        },
-                                         completion: {_ in
-                    self.cardBehavior.removeItem(cardView)
-            UIView.transition(with: cardView,
-                              duration: 0.3,
-                              options: [.transitionFlipFromLeft],
-                              animations: {
-                cardView.faceUp = false
-                cardView.setNeedsDisplay()
-                cardView.layer.borderColor = UIColor.clear.cgColor
-            }, completion: { _ in
-                if self.topMatchedPileCard.alpha == 0 {
-                    fadeIn(cardToFade: self.topMatchedPileCard)
-                }
-                self.finishedAnimating = true
-                self.match = false
-                self.currentMatchedCards.removeAll()
-            })})}
+            UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1,
+                                                           delay: 0,
+                                                           options: [],
+                                                           animations: { UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 1,
+                                                                                                                        delay: 0,
+                                                                                                                        options: [.curveLinear],
+                                                                                                                        animations: { self.currentMatchedCards.forEach {
+                $0.transform = (CGAffineTransform.identity)
+                $0.frame = self.matchedPile.convert(self.matchedPile.frame, to: self.boardView)
+            }}, completion: { _ in self.currentMatchedCards.forEach { UIView.transition(with: $0,
+                                                                                        duration: 1,
+                                                                                        options:
+                                                                                            [.curveLinear],
+                                                                                        animations: { fadeIn(cardToFade: self.topMatchedPileCard) },
+                                                                                        completion: {_ in
+                    UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3, delay: 0, options: [.transitionFlipFromLeft], animations: {
+                        self.currentMatchedCards.forEach {
+                            self.cardBehavior.removeItem($0)
+                            $0.faceUp = false
+                            $0.setNeedsDisplay()
+                            $0.layer.borderColor = UIColor.clear.cgColor
+                        }})})}})}, completion: { _ in self.deal3More(sender: UIView()) })
         }
     }
     

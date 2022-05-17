@@ -9,7 +9,7 @@ import Foundation
 
 enum Shape: Int, CaseIterable { case squiggle = 0, diamond, oval }
 enum Quantity: Int, CaseIterable { case one = 0, two, three }
-enum Color: Int, CaseIterable { case purple = 0, red, orange }
+enum Color: Int, CaseIterable { case orange = 0, green, blue }
 enum Shading: Int, CaseIterable { case striped = 0, solid, open }
 
 struct Card: Hashable {

@@ -28,18 +28,15 @@ final class SetDemo {
     func deal3More() -> [Int] {
         if deck.hasAvailableCardsToDraw() {
             checkForMatch()
-            var freeScreenSpots: [Int] = []
-            var isFreeSpace = 0
-            while freeScreenSpots.count < 3 {
-                if board[isFreeSpace] == nil {
-                    freeScreenSpots.append(isFreeSpace)
-                }
-                isFreeSpace += 1
+            board = board.filter({ $0 != nil })
+            let firstNewIndex = board.count
+            for _ in 0...2 {
+                board.append(deck.draw())
             }
-            for freeSpace in freeScreenSpots {
-                board[freeSpace] = deck.draw()
+            for _ in 0..<81 - board.count {
+                board.append(nil)
             }
-            return freeScreenSpots
+            return Array(firstNewIndex...firstNewIndex + 2)
         }
         return []
     }

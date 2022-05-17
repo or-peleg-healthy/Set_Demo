@@ -191,7 +191,8 @@ final class SetViewController: UIViewController, UIDynamicAnimatorDelegate {
             return
         }
         let newCards = game.deal3More()
-        if newCards.isEmpty {
+        if newCards.isEmpty, !justMatched {
+            deckPlaceHolder.isHidden = true
             noMoreCardsToDealAlert()
         } else {
             for indexOfCardOnScreen in newCards {
